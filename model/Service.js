@@ -1,0 +1,19 @@
+module.exports = (sequelize, DataTypes) => {
+  class Service extends DataTypes.Model {}
+
+  Service.init({
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    }
+  }, {
+    sequelize,
+    modelName: 'Service'
+  });
+
+  return Service;
+}
