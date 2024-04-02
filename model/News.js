@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
     publishedDate: {
       type: DataTypes.DATEONLY,
       allowNull: false
+    },
+    obsolete: {
+      type: DataTypes.BOOLEAN,
+      default: false
     }
   }, {
     sequelize,

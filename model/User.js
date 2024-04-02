@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
-  class Patient extends DataTypes.Model {}
+  class User extends DataTypes.Model {}
 
-  Patient.init({
+  User.init({
     firstName: {
       type: DataTypes.STRING,
       allowNull: false
@@ -21,11 +21,19 @@ module.exports = (sequelize, DataTypes) => {
     password: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    role: {
+      type: DataTypes.ENUM('Patient', 'Professional'),
+      allowNull: false
+    },
+    obsolete: {
+      type: DataTypes.BOOLEAN,
+      default: false
     }
   }, {
     sequelize,
-    modelName: 'Patient'
+    modelName: 'User'
   });
 
-  return Patient;
+  return User;
 };

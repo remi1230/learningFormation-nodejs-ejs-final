@@ -3,20 +3,12 @@ module.exports = (sequelize, DataTypes) => {
 
   Appointment.init({
     date: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
       allowNull: false
     },
-    time: {
-      type: DataTypes.TIME,
+    status: {
+      type: DataTypes.ENUM('pending', 'approved', 'declined'),
       allowNull: false
-    },
-    type: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    confirmed: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
     }
   }, {
     sequelize,

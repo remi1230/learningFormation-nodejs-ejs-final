@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
     description: {
       type: DataTypes.TEXT,
       allowNull: true
+    },
+    obsolete: {
+      type: DataTypes.BOOLEAN,
+      default: false
     }
   }, {
     sequelize,

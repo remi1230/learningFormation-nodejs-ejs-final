@@ -1,27 +1,34 @@
+delete require.cache[require.resolve('../config/database')];
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 // Importation des définitions de modèle
-const Patient     = require('./patient')(sequelize, Sequelize);
-const Appointment = require('./appointment')(sequelize, Sequelize);
-const Service     = require('./service')(sequelize, Sequelize);
-const News        = require('./news')(sequelize, Sequelize);
-const Schedule    = require('./schedule')(sequelize, Sequelize);
+const User        = require('./User')(sequelize, Sequelize);
+const Appointment = require('./Appointment')(sequelize, Sequelize);
+const Service     = require('./Service')(sequelize, Sequelize);
+const News        = require('./News')(sequelize, Sequelize);
+const Schedules   = require('./Schedules')(sequelize, Sequelize);
 
 // Associations
-Patient.hasMany(Appointment, { foreignKey: 'patientId' });
-Appointment.belongsTo(Patient, { foreignKey: 'patientId' });
+User.hasMany(Appointment, { foreignKey: 'userId' });
+Appointment.belongsTo(User, { foreignKey: 'userId' });
 
 Service.hasMany(Appointment, { foreignKey: 'serviceId' });
 Appointment.belongsTo(Service, { foreignKey: 'serviceId' });
+Service.hasMany(User, { foreignKey: 'serviceId' });
+User.belongsTo(Service, { foreignKey: 'serviceId' });
+
+User.hasMany(News, { foreignKey: 'userId' });
+News.belongsTo(User, { foreignKey: 'userId' });
+
 
 // Exportation de l'instance sequelize et des modèles
 module.exports = {
   sequelize,
   Sequelize,
-  Patient,
+  User,
   Appointment,
   Service,
   News,
-  Schedule
+  Schedules
 };
