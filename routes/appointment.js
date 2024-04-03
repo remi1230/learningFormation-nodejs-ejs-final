@@ -1,5 +1,5 @@
 /**
- * Configuration des routes pour les services.
+ * Configuration des routes pour les appointments.
  * Chaque route est protégée par le middleware d'authentification pour s'assurer
  * que seuls les utilisateurs authentifiés peuvent effectuer des opérations.
  */
@@ -9,13 +9,12 @@ const express = require('express');
 const router  = express.Router();
 
 // Importation du middleware d'authentification pour sécuriser les routes,
-// et du contrôleur gérant les actions sur les services
-const auth        = require('../middleware/auth');
-const serviceCtrl = require('../controllers/service');
+// et du contrôleur gérant les actions sur les appointments
+const auth            = require('../middleware/auth');
+const appointmentCtrl = require('../controllers/appointment');
 
 //Routes
-router.post('/service/add', auth, serviceCtrl.add);
-router.put('/service/upd/:id', auth, serviceCtrl.update);
+router.post('/appointment/add', appointmentCtrl.add);
 
 // Exportation du routeur configuré pour utilisation dans l'application principale
 module.exports = router;

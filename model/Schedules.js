@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Schedule.init({
     dayOfWeek: {
-      type: DataTypes.ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'),
+      type: DataTypes.ENUM('Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'),
       allowNull: false
     },
     openTime: {

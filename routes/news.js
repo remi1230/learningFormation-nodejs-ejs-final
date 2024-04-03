@@ -1,5 +1,5 @@
 /**
- * Configuration des routes pour les services.
+ * Configuration des routes pour les news.
  * Chaque route est protégée par le middleware d'authentification pour s'assurer
  * que seuls les utilisateurs authentifiés peuvent effectuer des opérations.
  */
@@ -10,12 +10,13 @@ const router  = express.Router();
 
 // Importation du middleware d'authentification pour sécuriser les routes,
 // et du contrôleur gérant les actions sur les services
-const auth        = require('../middleware/auth');
-const serviceCtrl = require('../controllers/service');
+const auth     = require('../middleware/auth');
+const newsCtrl = require('../controllers/news');
 
 //Routes
-router.post('/service/add', auth, serviceCtrl.add);
-router.put('/service/upd/:id', auth, serviceCtrl.update);
+router.get('/news', newsCtrl.getAll);
+router.post('/news/add', auth, newsCtrl.add);
+router.put('/news/upd/:id', auth, newsCtrl.update);
 
 // Exportation du routeur configuré pour utilisation dans l'application principale
 module.exports = router;

@@ -27,13 +27,35 @@ exports.signup = (req, res, next) => {
                 phoneNumber : req.body.phoneNumber,
                 password    : hash,
                 role        : req.body.role,
-                service     : req.body.service && req.body.service._id ? req.body.service._id : null,
+                service     : req.body.serviceId ? req.body.serviceId : null,
                 obsolete    : false,
             })
             .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
             .catch(error => res.status(400).json({ error }));
         })
         .catch(error => res.status(500).json({ error }));
+};
+
+/**
+ * Crée un nouvel utilisateur dans la base de données.
+ * Hash le mot de passe fourni avant de sauvegarder l'utilisateur pour assurer la sécurité des données.
+ * 
+ * @param {Object} userData - Données utilisateur
+ */
+exports.createUser = (userData) => {
+    return bcrypt.hash(userData.password, 10)
+        .then(hash => {
+            return User.create({
+                firstName   : userData.firstName,
+                lastName    : userData.lastName,
+                email       : userData.email,
+                phoneNumber : userData.phoneNumber,
+                password    : hash,
+                role        : userData.role,
+                service     : userData.service && userData.serviceId ? userData.serviceId : null,
+                obsolete    : false,
+            });
+        });
 };
 
 /**
@@ -59,7 +81,7 @@ exports.login = (req, res, next) => {
                     res.status(200).json({
                         userId: user._id,
                         token: jwt.sign(
-                            { userId: user._id,
+                            { userId: user.id,
                               userRole: user.role,
                             },
                             'RANDOM_TOKEN_SECRET',
