@@ -1,6 +1,7 @@
-//Importation du modèle représentant la structure des données en BDD pour les tables appointment et user
+//Importation du modèle représentant la structure des données en BDD pour les tables appointment, user et service
 const db          = require('../model');
 const Appointment = db.Appointment;
+const Service     = db.Service;
 const User        = db.User;
 
 const { createUser } = require('./user');
@@ -58,32 +59,22 @@ exports.update = (req, res, next) => {
     if(req.auth.userRole !== 'Professional'){ return res.status(400).json({ error: "Seuls les professionnels peuvent modifier les appointment!" })};
 
     const id          = req.params.id;
-    const title       = req.body.title;
-    const content     = req.body.content;
-    const obsolete    = req.body.obsolete;
-    const newAuthorId = req.auth.userId;
+    const status      = req.body.status;
 
     Appointment.findByPk(id)
     .then(appointment => {
         if (!appointment) {
             return res.status(404).json({error: 'Appointment non trouvé !'});
         }
-
-        if(newAuthorId !== appointment.userId){
-            return res.status(401).json({ message: "Vous devez être l'auteur de la appointment pour la modifier" });
-        }
-
         const updateValues = {
-            title    : title   !== undefined ? title   : appointment.title,
-            content  : content !== undefined ? content : appointment.content,
-            obsolete : obsolete !== undefined ? obsolete : appointment.obsolete,
+            status: status   !== undefined ? status   : appointment.status,
         };
         
         appointment.update(updateValues)
         .then(() => res.status(200).json({message: 'Appointment mis à jour !'}))
         .catch(error => res.status(400).json({error}));
     })
-    .catch(error => res.status(400).json({error}));
+    .catch(error => res.status(400).json({erreur: error, id: id}));
 };
 
  /**
@@ -95,15 +86,78 @@ exports.update = (req, res, next) => {
  */
 exports.getAll = (req, res, next) => {
     Appointment.findAll({
-        where: { obsolete: 0 },
-        include: [{
-            model: User,
-            attributes: ['id', 'firstName', 'lastName', 'email', 'phoneNumber'] // Spécifiez les attributs que vous voulez inclure de l'utilisateur
-        }]
+        include: [
+            {
+                model: User,
+                attributes: ['id', 'firstName', 'lastName', 'email', 'phoneNumber']
+            },
+            {
+                model: Service,
+                attributes: ['id', 'name', 'description']
+            }
+        ]
     })
     .then(appointment => {
         if (!appointment) {
             return res.status(404).json({error: 'Aucune appointment trouvée !'});
+        }
+        res.status(200).json(appointment);
+    })
+};
+
+ /**
+ * Récupère toutes les appointment d'un patient
+ * 
+ * @param {Object} req - L'objet de la requête Express.
+ * @param {Object} res - L'objet de la réponse Express. Renvoie un message de succès en cas de mise à jour réussie.
+ * @param {Function} next - La fonction middleware à exécuter ensuite.
+ */
+exports.getByService = (req, res, next) => {
+    Appointment.findAll({
+        where: { serviceId: req.params.serviceId },
+        include: [
+            {
+                model: User,
+                attributes: ['id', 'firstName', 'lastName', 'email', 'phoneNumber']
+            },
+            {
+                model: Service,
+                attributes: ['id', 'name', 'description']
+            }
+        ]
+    })
+    .then(appointment => {
+        if (!appointment) {
+            return res.status(404).json({error: 'Aucun appointment trouvée !'});
+        }
+        res.status(200).json(appointment);
+    })
+};
+
+ /**
+ * Récupère toutes les appointment d'un patient
+ * 
+ * @param {Object} req - L'objet de la requête Express.
+ * @param {Object} res - L'objet de la réponse Express. Renvoie un message de succès en cas de mise à jour réussie.
+ * @param {Function} next - La fonction middleware à exécuter ensuite.
+ */
+exports.getByPatient = (req, res, next) => {
+    Appointment.findAll({
+        where: { userId: req.params.patientId },
+        include: [
+            {
+                model: User,
+                attributes: ['id', 'firstName', 'lastName', 'email', 'phoneNumber']
+            },
+            {
+                model: Service,
+                attributes: ['id', 'name', 'description']
+            }
+        ]
+    })
+    .then(appointment => {
+        if (!appointment) {
+            return res.status(404).json({error: 'Aucun appointment trouvée !'});
         }
         res.status(200).json(appointment);
     })

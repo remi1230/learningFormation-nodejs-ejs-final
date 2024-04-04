@@ -7,5 +7,22 @@
 // Importation du module path pour construire des chemins de fichier
 //const path = require('path');
 
-// Routes
-exports.indexPage = (req, res, next) => res.render('index', { title: 'Test page' });
+const { getAll: getAllServices }  = require('./service');
+const { getAll: getAllSchedules } = require('./schedules');
+
+//Routes
+exports.indexPage = async (req, res, next) => {
+    try {
+        const services  = await getAllServices(req);
+        const schedules = await getAllSchedules(req);
+
+        res.render('index', {
+            title: 'Test page',
+            services: services,
+            schedules: schedules,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Une erreur est survenue");
+    }
+};

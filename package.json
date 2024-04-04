@@ -18,6 +18,7 @@
   "homepage": "https://github.com/remi1230/learningFormation-nodejs-ejs#readme",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.9",

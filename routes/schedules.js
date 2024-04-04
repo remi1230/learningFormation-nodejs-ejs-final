@@ -14,6 +14,7 @@ const auth          = require('../middleware/auth');
 const schedulesCtrl = require('../controllers/schedules');
 
 //Routes
+router.get('/schedules', schedulesCtrl.getAll);
 router.post('/schedules/addOrUpd', auth, schedulesCtrl.addOrUpdate);
 router.delete('/schedules/deleteByDayOfWeek/:dayOfWeek', auth, schedulesCtrl.deleteByDayOfWeek);
 

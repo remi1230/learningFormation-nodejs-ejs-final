@@ -14,6 +14,7 @@ const auth        = require('../middleware/auth');
 const serviceCtrl = require('../controllers/service');
 
 //Routes
+router.get('/services', serviceCtrl.getAll);
 router.post('/service/add', auth, serviceCtrl.add);
 router.put('/service/upd/:id', auth, serviceCtrl.update);
 

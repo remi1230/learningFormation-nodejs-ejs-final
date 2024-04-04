@@ -81,7 +81,7 @@ exports.getAll = (req, res, next) => {
         where: { obsolete: 0 },
         include: [{
             model: User,
-            attributes: ['id', 'firstName', 'lastName', 'email', 'phoneNumber'] // Spécifiez les attributs que vous voulez inclure de l'utilisateur
+            attributes: ['id', 'firstName', 'lastName', 'email', 'phoneNumber']
         }]
     })
     .then(news => {

@@ -2,8 +2,77 @@
 <html>
 <head>
     <title>Hello EJS</title>
+    <link rel="icon" type="image/png" href="/public/img/logo.png">
+    <link rel="stylesheet" href="/public/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/public/css/app/appStyles.css">
+    <!-- <script src="/public/js/jQuery/jQuery360.min.js" defer></script> -->
+    <script src="/public/js/bootstrap.bundle.min.js" defer></script>
+    <script src="/public/js/app/appScripts.js" defer></script>
 </head>
 <body>
-    <h1>Hello, <%= title %>!</h1>
+    <h1 class="center">Cabinet du docteur Dupont</h1>
+    <div class="card">
+        <div class="card-body center">
+            Le Cabinet dentaire du docteur Dupont est un espace médical réservé à la santé bucco-dentaire mais aussi à l'amélioration ou au rétablissement du sourire
+        </div>
+    </div>
+
+    <div class="container mTop42">
+        <div class="row mBot42 centerFlex">
+            <div id="carouselClinic" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <img src="/public/img/clinic/clinic.webp" class="d-block w-100" alt="First slide">
+                  </div>
+                  <div class="carousel-item">
+                    <img src="/public/img/clinic/patientSourire.webp" class="d-block w-100" alt="Second slide">
+                  </div>
+                  <div class="carousel-item">
+                    <img src="/public/img/clinic/carie.webp" class="d-block w-100" alt="Second slide">
+                  </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselClinic" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselClinic" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+        <div class="row ml100">
+            <% services.forEach(function(service) { %>
+                <div class="col">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                        <h5 class="card-title"><%= service.name %></h5>
+                        <p class="card-text"><%= service.description %></p>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+        <div class="row mTop42">
+            <div class="d-flex justify-content-center">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                    <h5 class="card-title">Horaires d'ouverture</h5>
+                    <p class="card-text">
+                        <div>
+                            <% schedules.forEach(function(schedule) { %>
+                                <div class="row">
+                                    <div class="col"><%= schedule.dayOfWeek %></div>
+                                    <div class="col"><%= schedule.openTime.slice(0, 5) %></div>
+                                    <div class="col"><%= schedule.closeTime.slice(0, 5) %></div>
+                                </div>
+                            <% }); %>
+                        </div>
+                    </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

@@ -1,0 +1,24 @@
+body{
+    padding: 15px;
+}
+
+.center{
+    text-align: center;
+}
+.centerFlex{
+    display: flex;
+    justify-content: center;
+}
+.mTop42{
+    margin-top: 42px;
+}
+.mBot42{
+    margin-bottom: 42px;
+}
+.ml100{
+    margin-left: 100px;
+}
+
+#carouselClinic{
+    width: 666px;
+}
