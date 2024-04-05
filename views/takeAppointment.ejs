@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cabinet Dupont</title>
+    <link rel="icon" type="image/png" href="/public/img/logo.png">
+    <link rel="stylesheet" href="/public/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/public/css/app/appStyles.css">
+    <script src="/public/js/bootstrap.bundle.min.js" defer></script>
+    <script src="/public/js/app/appScripts.js" defer></script>
+</head>
+<body>
+    <h1 class="center">Cabinet du docteur Dupont - PRENDRE RDV</h1>
+    <div class="container centerFlex">
+        <form id="takeAppointmentForm" action="/takeAppointmentSave" method="post">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+                <div id="emailHelp" class="form-text">Nous nous engageons à ne pas communiquer votre email.</div>
+            </div>
+            <div class="mb-3">
+                <label for="firstName" class="form-label">Prénom</label>
+                <input type="text" class="form-control" id="firstName">
+            </div>
+            <div class="mb-3">
+                <label for="lastName" class="form-label">Nom</label>
+                <input type="text" class="form-control" id="lastName">
+            </div>
+            <div class="mb-3">
+                <label for="phoneNumber" class="form-label">Téléphone</label>
+                <input type="text" class="form-control" id="phoneNumber">
+            </div>
+            <div class="mb-3">
+                <label for="selectServiceForAppointment" class="form-label">Service</label>
+                <select id="selectServiceForAppointment" class="form-select" aria-label="Default select example">
+                    <% services.forEach(function(service) { %>
+                        <option value="<%= service.name %>"><%= service.name %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">PRENDRE RDV</button>
+        </form>
+    </div>
+    
+</body>
+</html>

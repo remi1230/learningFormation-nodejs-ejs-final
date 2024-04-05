@@ -1,0 +1,54 @@
+<%- include('header') %>
+
+<main>
+    <h1 class="center">Le cabinet du docteur Dupont</h1>
+
+    <div class="card">
+        <div class="card-body justify">
+            <p>Bienvenue au cabinet dentaire du Docteur Dupont, un espace dédié à la santé et à la beauté de votre sourire,
+                situé au cœur de notre ville. Notre cabinet se distingue par son approche holistique de la dentisterie, combinant expertise technique,
+                innovations technologiques et une véritable passion pour le bien-être de nos patients.
+            </p>
+            <p>
+                Le Docteur Dupont, avec plus de 20 ans d'expérience dans le domaine dentaire,
+                a fondé ce cabinet avec l'ambition de créer un lieu où la technologie de pointe et l'humanité se rencontrent pour offrir des soins dentaires exceptionnels.
+                Spécialiste en soins préventifs, esthétiques et réparateurs, le Docteur Dupont est reconnu pour son approche minutieuse et personnalisée,
+                visant toujours à atteindre le meilleur résultat possible pour chaque patient.
+            </p>
+            <p>
+                Notre équipe, composée d'assistants dentaires qualifiés,
+                d'hygiénistes dévoués et de spécialistes reconnus dans leur domaine, partage la vision du Docteur Dupont d'une dentisterie moderne et bienveillante.
+                Ensemble, nous travaillons main dans la main pour vous offrir une expérience patient incomparable, dans un environnement accueillant et rassurant.
+            </p>
+            <p>
+                Nous proposons une gamme complète de soins dentaires, des examens de routine et nettoyages à des traitements plus complexes tels que l'orthodontie,
+                les implants dentaires, et la dentisterie cosmétique. Notre objectif est de vous accompagner dans chaque étape de votre parcours vers un sourire sain et rayonnant,
+                en mettant l'accent sur la prévention et l'éducation à la santé bucco-dentaire.
+            </p>
+            <p>
+                Nous nous engageons à vous écouter, à vous informer et à vous guider vers les meilleurs choix de traitement, adaptés à vos besoins uniques et à vos attentes.
+                Nous vous invitons à découvrir l'excellence des soins dentaires au cabinet du Docteur Dupont, où votre sourire est notre priorité.
+                Consultez l'ensemble du site pour prendre rendez-vous ou pour en savoir plus sur nos services. Ensemble, faisons rayonner votre sourire!
+            </p>
+        </div>
+    </div>
+
+    <div id="servicesContainer" class="d-flex justify-content-center">
+        <% services.forEach(function(service) { %>
+            <div class="me-2">
+                <div class="card" style="width: 36rem;">
+                    <div class="card-body">
+                        <h5 class="card-title center">
+                            <%= service.name %> - 
+                            <%= (service.Users && service.Users.length > 0) ? service.Users[0].firstName : 'Pas d\'utilisateur' %>
+                        </h5>                        
+                    <p class="card-text"><%= service.detail %></p>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+
+<main>
+    
+<%- include('footer') %>

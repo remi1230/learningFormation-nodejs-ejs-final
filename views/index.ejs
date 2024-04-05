@@ -1,24 +1,22 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Hello EJS</title>
-    <link rel="icon" type="image/png" href="/public/img/logo.png">
-    <link rel="stylesheet" href="/public/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/public/css/app/appStyles.css">
-    <!-- <script src="/public/js/jQuery/jQuery360.min.js" defer></script> -->
-    <script src="/public/js/bootstrap.bundle.min.js" defer></script>
-    <script src="/public/js/app/appScripts.js" defer></script>
-</head>
-<body>
-    <h1 class="center">Cabinet du docteur Dupont</h1>
+<div>
+<%- include('header') %>
+
+<main>
+    <h1 class="center mTop10">
+        <div id="titleMainPageSection" class="row">
+            <div class="col-2" id="connectButtonContainer"><button id="connexion" type="button" class="btn btn-warning btn-sm">SE CONNECTER</button></div>
+            <div class="col-8">Cabinet du docteur Dupont</div>
+            <div class="col-2" id="takeAppointmentButtonContainer"><button id="takeAppointment" type="button" class="btn btn-success btn-sm">PRENDRE RDV</button></div>
+        </div>
+    </h1>
     <div class="card">
         <div class="card-body center">
             Le Cabinet dentaire du docteur Dupont est un espace médical réservé à la santé bucco-dentaire mais aussi à l'amélioration ou au rétablissement du sourire
         </div>
     </div>
 
-    <div class="container mTop42">
-        <div class="row mBot42 centerFlex">
+    <div class="container mTop20">
+        <div class="row mBot20 centerFlex">
             <div id="carouselClinic" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
                   <div class="carousel-item active">
@@ -41,30 +39,29 @@
                 </button>
             </div>
         </div>
-        <div class="row ml100">
+        <div class="d-flex justify-content-center">
             <% services.forEach(function(service) { %>
-                <div class="col">
+                <div class="me-2">
                     <div class="card" style="width: 18rem;">
                         <div class="card-body">
-                        <h5 class="card-title"><%= service.name %></h5>
+                        <h5 class="card-title center"><%= service.name %></h5>
                         <p class="card-text"><%= service.description %></p>
                         </div>
                     </div>
                 </div>
             <% }); %>
         </div>
-        <div class="row mTop42">
+        <div class="row mTop20">
             <div class="d-flex justify-content-center">
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">
-                    <h5 class="card-title">Horaires d'ouverture</h5>
+                    <h5 class="card-title center">Horaires d'ouverture</h5>
                     <p class="card-text">
                         <div>
                             <% schedules.forEach(function(schedule) { %>
-                                <div class="row">
-                                    <div class="col"><%= schedule.dayOfWeek %></div>
-                                    <div class="col"><%= schedule.openTime.slice(0, 5) %></div>
-                                    <div class="col"><%= schedule.closeTime.slice(0, 5) %></div>
+                                <div class="row ml23">
+                                    <div class="col-5"><%= schedule.dayOfWeek %></div>
+                                    <div class="col"><%= schedule.openTime.slice(1, 5) + ' - ' + schedule.closeTime.slice(0, 5) %></div>
                                 </div>
                             <% }); %>
                         </div>
@@ -74,5 +71,6 @@
             </div>
         </div>
     </div>
-</body>
-</html>
+<main>
+    
+<%- include('footer') %>

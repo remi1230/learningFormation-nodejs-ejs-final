@@ -1,5 +1,14 @@
 body{
-    padding: 15px;
+    padding: 15px 0 0 0;
+}
+footer{
+    font-size: 12px;
+    margin-top: 50px;
+    padding: 25px 0 25px 25px;
+    background-color: #333;
+    color: white;
+    border-top: 1px #888 solid;
+    border-bottom: 1px #888 solid;
 }
 
 .center{
@@ -9,16 +18,66 @@ body{
     display: flex;
     justify-content: center;
 }
-.mTop42{
-    margin-top: 42px;
+.mTop10{
+    margin-top: 10px;
 }
-.mBot42{
-    margin-bottom: 42px;
+.mTop20{
+    margin-top: 20px;
+}
+.mBot20{
+    margin-bottom: 20px;
+}
+.ml23{
+    margin-left: 23px;
 }
 .ml100{
     margin-left: 100px;
 }
+.justify{
+    text-align: justify;
+}
 
 #carouselClinic{
+    width: 421px;
+}
+#connectButtonContainer{
+    text-align: left;
+    margin-left: 15px;
+}
+
+#takeAppointmentButtonContainer{
+    text-align: right;
+    margin-left: -30px;
+}
+#takeAppointmentForm{
     width: 666px;
 }
+#servicesContainer{
+    height: 300px;
+}
+
+/* ****************** MENU****************** */
+#navigation-menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+#navigation-menu li {
+    float: left;
+}
+#navigation-menu li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+#navigation-menu li a:hover {
+    background-color: #111;
+}
+#appHeader{
+    margin-top: -15px;
+}
+

@@ -1,6 +1,9 @@
-//Importation du modèle représentant la structure des données en BDD pour la table service
+//Importation des modèles représentant la structure des données en BDD pour les tables service et user
 const db      = require('../model');
-const Service = db.Service;
+/*const Service = db.Service;
+const User    = db.User;*/
+
+const { Service, User } = require('../model/index'); 
 
 /**
  * Crée un nouveau service avec le nom et la description fourni dans le corps de la requête.
@@ -75,4 +78,19 @@ exports.getAll = (req, res, next) => {
     return Service.findAll({
         where: { obsolete: 0 },
     })
+};
+
+/**
+ * Récupère tous les services et les professionnels associés
+ * 
+ * @param {Object} req - L'objet de la requête Express.
+ * @param {Object} res - L'objet de la réponse Express. Renvoie un message de succès en cas de mise à jour réussie.
+ * @param {Function} next - La fonction middleware à exécuter ensuite.
+ */
+exports.getAllServicesWithPro  = () => {
+    return Service.findAll({
+        where: { obsolete: 0 },
+        include: User,
+        logging: console.log
+    });
 };

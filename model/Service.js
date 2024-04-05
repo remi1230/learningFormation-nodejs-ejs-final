@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: true
     },
+    detail: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
     obsolete: {
       type: DataTypes.BOOLEAN,
       default: false
