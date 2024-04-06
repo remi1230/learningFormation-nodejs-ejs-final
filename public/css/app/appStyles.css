@@ -55,6 +55,9 @@ footer{
 #servicesContainer{
     height: 300px;
 }
+#backOfficeTabContent{
+    padding: 15px;
+}
 
 /* ****************** MENU****************** */
 #navigation-menu {

@@ -3,6 +3,8 @@
 const db   = require('../model');
 const User = db.User;
 
+const { getAllServices, getAllSchedules } = require('../services/backoffice');
+
 // Importation des modules `bcrypt` et `jsonwebtoken`.
 // `bcrypt` est utilisé pour le hachage sécurisé des mots de passe.
 // `jsonwebtoken` sert à créer et à vérifier les tokens JWT (JSON Web Tokens).
@@ -71,14 +73,31 @@ exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
         .then(user => {
             if (!user) {
-                return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+                //return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+                res.render('wrongPassword');
             }
             bcrypt.compare(req.body.password, user.password)
-                .then(valid => {
+                .then(async valid => {
                     if (!valid) {
-                        return res.status(401).json({ error: 'Mot de passe incorrect !' });
+                        //return res.status(401).json({ error: 'Mot de passe incorrect !' });
+                        res.render('wrongPassword');
                     }
-                    res.status(200).json({
+
+                    const token = jwt.sign(
+                        { userId: user.id,
+                          userRole: user.role,
+                        },
+                        'RANDOM_TOKEN_SECRET',
+                        { expiresIn: '24h' }
+                    );
+
+                    const services  = await getAllServices(req);
+                    const schedules = await getAllSchedules(req);
+
+                    res.cookie('token', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+                    res.render('backOffice', { user, services, schedules });
+
+                    /*res.status(200).json({
                         userId: user._id,
                         token: jwt.sign(
                             { userId: user.id,
@@ -87,7 +106,7 @@ exports.login = (req, res, next) => {
                             'RANDOM_TOKEN_SECRET',
                             { expiresIn: '24h' }
                         )
-                    });
+                    });*/
                 })
                 .catch(error => res.status(500).json({ error }));
         })

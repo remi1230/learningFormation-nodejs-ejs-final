@@ -1,45 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Cabinet Dupont</title>
-    <link rel="icon" type="image/png" href="/public/img/logo.png">
-    <link rel="stylesheet" href="/public/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/public/css/app/appStyles.css">
-    <script src="/public/js/bootstrap.bundle.min.js" defer></script>
-    <script src="/public/js/app/appScripts.js" defer></script>
-</head>
-<body>
+<%- include('includes/header') %>
+<main style="margin-bottom: 300px; ">
     <h1 class="center">Cabinet du docteur Dupont - PRENDRE RDV</h1>
     <div class="container centerFlex">
-        <form id="takeAppointmentForm" action="/takeAppointmentSave" method="post">
+        <form id="takeAppointmentForm" action="/appointment/add" method="post">
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+                <input type="email" name="userEmail" class="form-control" id="email" aria-describedby="emailHelp">
                 <div id="emailHelp" class="form-text">Nous nous engageons à ne pas communiquer votre email.</div>
             </div>
             <div class="mb-3">
                 <label for="firstName" class="form-label">Prénom</label>
-                <input type="text" class="form-control" id="firstName">
+                <input type="text" class="form-control" id="firstName" name="userFirstName">
             </div>
             <div class="mb-3">
                 <label for="lastName" class="form-label">Nom</label>
-                <input type="text" class="form-control" id="lastName">
+                <input type="text" class="form-control" id="lastName" name="userLastName">
             </div>
             <div class="mb-3">
                 <label for="phoneNumber" class="form-label">Téléphone</label>
-                <input type="text" class="form-control" id="phoneNumber">
+                <input type="text" class="form-control" id="phoneNumber" name="userPhoneNumber">
             </div>
             <div class="mb-3">
-                <label for="selectServiceForAppointment" class="form-label">Service</label>
-                <select id="selectServiceForAppointment" class="form-select" aria-label="Default select example">
-                    <% services.forEach(function(service) { %>
-                        <option value="<%= service.name %>"><%= service.name %></option>
-                    <% }); %>
-                </select>
+                <%- include('includes/servicesSelect') %>
+            </div>
+            <div class="mb-3">
+                <label for="date">Date</label>
+                <input id="date" name="date" class="form-control" type="date"/>
             </div>
             <button type="submit" class="btn btn-primary">PRENDRE RDV</button>
         </form>
     </div>
-    
-</body>
-</html>
+    <div id="appointmentDoneContainer">
+        <h3 id="appointmentDone" <% if (appointmentDone === "true") { %>style='display: block'<% } else { %>style='display: none'<% } %>>RDV enregistré</h3>
+    </div>
+</main>
+<%- include('includes/footer') %>

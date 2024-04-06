@@ -1,0 +1,49 @@
+<%- include('includes/header') %>
+
+<main>
+    <h1 class="center">Cabinet du docteur Dupont, bonjour <%= user.firstName + ' ' + user.lastName %></h1>
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Services</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Actualités</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Horaires</button>
+        </li>
+      </ul>
+      
+      <!-- Contenu des onglets -->
+      <div class="tab-content" id="backOfficeTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+            <div class="row">
+                <form id="addServiceForm" class="col">
+                    <%- include('includes/servicesFormBase') %>
+                    <button type="submit" class="btn btn-primary" style="margin-top: 20px; ">CRÉER</button>
+                </form>
+                <form id="updServiceForm" class="col">
+                    <div style="margin-bottom: 16px; "><%- include('includes/servicesSelect') %></div>
+                    <%- include('includes/servicesFormBase') %>
+                    <div class="form-check" style="margin-top: 10px; ">
+                        <input class="form-check-input" type="checkbox" value="" id="obsolete" name="obsolete">
+                        <label class="form-check-label" for="obsolete">
+                          Obsolète
+                        </label>
+                    </div>
+                    <div class="row" style="margin-top: 20px; ">
+                        <button type="submit" class="btn btn-primary col-3" >MODIFIER</button>
+                        <div class="col-6" ></div>
+                        <button type="submit" class="btn btn-danger col-3">SUPPRIMER</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">Contenu des actualités</div>
+        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">Contenu des horaires</div>
+      </div>
+<main>
+<div style="margin-bottom: 260px; "></div>
+<%- include('includes/footer') %>

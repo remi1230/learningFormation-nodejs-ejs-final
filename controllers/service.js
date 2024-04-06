@@ -1,8 +1,4 @@
 //Importation des modèles représentant la structure des données en BDD pour les tables service et user
-const db      = require('../model');
-/*const Service = db.Service;
-const User    = db.User;*/
-
 const { Service, User } = require('../model/index'); 
 
 /**
@@ -68,13 +64,31 @@ exports.update = (req, res, next) => {
 };
 
 /**
+ * Récupère un service
+ * 
+ * @param {Object} req - L'objet de la requête Express.
+ * @param {Object} res - L'objet de la réponse Express. Renvoie un message de succès en cas de mise à jour réussie.
+ * @param {Function} next - La fonction middleware à exécuter ensuite.
+ */
+exports.getServiceById = (req, res, next) => {
+    Service.findByPk(req.params.id)
+    .then(service => {
+        if (!service) {
+            return res.status(404).json({error: 'Service non trouvé !'});
+        }
+        return res.status(200).json({service});
+    })
+    .catch(error => res.status(400).json({error}));
+};
+
+/**
  * Récupère tous les services
  * 
  * @param {Object} req - L'objet de la requête Express.
  * @param {Object} res - L'objet de la réponse Express. Renvoie un message de succès en cas de mise à jour réussie.
  * @param {Function} next - La fonction middleware à exécuter ensuite.
  */
-exports.getAll = (req, res, next) => {
+exports.getAllServices = (req, res, next) => {
     return Service.findAll({
         where: { obsolete: 0 },
     })

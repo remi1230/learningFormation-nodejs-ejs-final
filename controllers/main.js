@@ -4,9 +4,6 @@
  * permettant l'affichage de différentes pages de l'application web.
  */
 
-// Importation du module path pour construire des chemins de fichier
-//const path = require('path');
-
 const { getAllServices, getAllServicesWithPro } = require('./service');
 const { getAll: getAllSchedules } = require('./schedules');
 
@@ -38,6 +35,7 @@ exports.takeAppointmentPage = async (req, res, next) => {
                 return a.name.localeCompare(b.name);
             }),
             schedules: schedules,
+            appointmentDone: req.body.userFirstName ? 'true' : 'false'
         });
     } catch (error) {
         console.error(error);
@@ -62,3 +60,5 @@ exports.cabinetPage = async (req, res, next) => {
         res.status(500).send("Une erreur est survenue");
     }
 };
+
+exports.connexionPage  = async (req, res, next) => { res.render('connexion');  };

@@ -4,7 +4,8 @@ const Appointment = db.Appointment;
 const Service     = db.Service;
 const User        = db.User;
 
-const { createUser } = require('./user');
+const { createUser }          = require('./user');
+const { takeAppointmentPage } = require('./main');
 
 /**
  * Crée un nouveau appointment.
@@ -32,8 +33,8 @@ exports.add = async (req, res, next) => {
             user = await createUser(userData);
         }
         const serviceId = req.body.serviceId;
-        const date = req.body.date;
-        const status = 'pending';
+        const date      = req.body.date;
+        const status    = 'pending';
 
         await Appointment.create({
             userId: user.id,
@@ -41,7 +42,8 @@ exports.add = async (req, res, next) => {
             date: date,
             status: status
         });
-        res.status(201).json({message: 'Appointment enregistré !'});
+        //res.status(201).json({message: 'Appointment enregistré !'});
+        takeAppointmentPage(req, res, next);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
