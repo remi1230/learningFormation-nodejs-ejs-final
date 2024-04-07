@@ -3,7 +3,7 @@
 const db   = require('../model');
 const User = db.User;
 
-const { getAllServices, getAllSchedules } = require('../services/backoffice');
+const { getAllServices, getAllSchedules, getAllNews } = require('../services/backoffice');
 
 // Importation des modules `bcrypt` et `jsonwebtoken`.
 // `bcrypt` est utilisé pour le hachage sécurisé des mots de passe.
@@ -70,16 +70,17 @@ exports.createUser = (userData) => {
  * @param {Function} next - La fonction middleware à exécuter ensuite.
  */
 exports.login = (req, res, next) => {
-    User.findOne({ email: req.body.email })
+    User.findOne({where: { email: req.body.email }})
         .then(user => {
+            console.log(user)
             if (!user) {
-                //return res.status(401).json({ error: 'Utilisateur non trouvé !' });
                 res.render('wrongPassword');
             }
-            bcrypt.compare(req.body.password, user.password)
+            else if(user.role !== 'Professional'){ res.render('patientNoConnexion'); }
+            else{
+                bcrypt.compare(req.body.password, user.password)
                 .then(async valid => {
                     if (!valid) {
-                        //return res.status(401).json({ error: 'Mot de passe incorrect !' });
                         res.render('wrongPassword');
                     }
 
@@ -93,22 +94,15 @@ exports.login = (req, res, next) => {
 
                     const services  = await getAllServices(req);
                     const schedules = await getAllSchedules(req);
+                    const news      = await getAllNews(req);
 
-                    res.cookie('token', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
-                    res.render('backOffice', { user, services, schedules });
+                    services.sort((a, b) => { return a.name.localeCompare(b.name); });
 
-                    /*res.status(200).json({
-                        userId: user._id,
-                        token: jwt.sign(
-                            { userId: user.id,
-                              userRole: user.role,
-                            },
-                            'RANDOM_TOKEN_SECRET',
-                            { expiresIn: '24h' }
-                        )
-                    });*/
+                    res.cookie('token', token, { httpOnly: false, maxAge: 24 * 60 * 60 * 1000 });
+                    res.render('backOffice', { user, services, schedules, news });
                 })
                 .catch(error => res.status(500).json({ error }));
+            }
         })
         .catch(error => res.status(500).json({ error }));
  };

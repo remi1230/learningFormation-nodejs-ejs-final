@@ -1,5 +1,5 @@
 //Importation des modèles représentant la structure des données en BDD
-const { Service, Schedules } = require('../model/index');
+const { Service, Schedules, News } = require('../model/index');
 
 async function getAllServices(req) {
     return await Service.findAll({
@@ -11,4 +11,8 @@ async function getAllSchedules(req) {
     return await Schedules.findAll()
 }
 
-module.exports = { getAllServices, getAllSchedules };
+async function getAllNews(req) {
+    return await News.findAll()
+}
+
+module.exports = { getAllServices, getAllSchedules, getAllNews };

@@ -14,9 +14,11 @@ exports.add = (req, res, next) => {
 
     const name        = req.body.name;
     const description = req.body.description;
+    const detail      = req.body.detail;
     Service.create({
         name        : name,
         description : description,
+        detail      : detail,
         obsolete    : false,
     })
     .then(() => { res.status(201).json({message: 'Service enregistré !'})})
@@ -37,6 +39,7 @@ exports.update = (req, res, next) => {
     const id          = req.params.id;
     const name        = req.body.name;
     const description = req.body.description;
+    const detail      = req.body.detail;
     const obsolete    = req.body.obsolete;
 
     Service.findByPk(id)
@@ -49,6 +52,7 @@ exports.update = (req, res, next) => {
         const updateValues = {
             name        : name !== undefined ? name : service.name,
             description : description !== undefined ? description : service.description,
+            detail      : detail !== undefined ? detail : service.detail,
         };
         
         // Vérifie explicitement si 'obsolete' est présent dans le corps de la requête
@@ -95,6 +99,24 @@ exports.getAllServices = (req, res, next) => {
 };
 
 /**
+ * Récupère tous les services et les retourne en JSON
+ * 
+ * @param {Object} req - L'objet de la requête Express.
+ * @param {Object} res - L'objet de la réponse Express. Renvoie un message de succès en cas de mise à jour réussie.
+ * @param {Function} next - La fonction middleware à exécuter ensuite.
+ */
+exports.getAllServicesInJSON = (req, res, next) => {
+    return Service.findAll()
+    .then(services => {
+        if (!services) {
+            return res.status(404).json({error: 'Aucun service en base !'});
+        }
+        return res.status(200).json({services});
+    })
+    .catch(error => res.status(400).json({error}));
+};
+
+/**
  * Récupère tous les services et les professionnels associés
  * 
  * @param {Object} req - L'objet de la requête Express.
@@ -108,3 +130,34 @@ exports.getAllServicesWithPro  = () => {
         logging: console.log
     });
 };
+
+/**
+ * Supprime un service en base
+ * 
+ * @param {Object} req - L'objet de la requête Express.
+ * @param {Object} res - L'objet de la réponse Express. Renvoie un message de succès en cas de mise à jour réussie.
+ * @param {Function} next - La fonction middleware à exécuter ensuite.
+ */
+exports.delete = (req, res, next) => {
+    const id = req.params.id; // ou une autre logique pour obtenir l'ID
+  
+    // Modèle Sequelize pour l'objet que vous voulez supprimer, par exemple 'Item'
+    Service.destroy({
+      where: { id: id } // condition de correspondance
+    })
+    .then(result => {
+      if (result === 0) {
+        // Aucun objet trouvé avec cet ID, ou rien à supprimer
+        return res.status(404).json({ message: 'Service non trouvé' });
+      }
+      // La suppression a été effectuée
+      res.status(200).json({ message: 'Service supprimé avec succès !' });
+    })
+    .catch(error => {
+      // Gérer l'erreur
+      res.status(500).json({ message: 'Une erreur est survenue durant la suppression', error });
+    });
+};
+  
+
+

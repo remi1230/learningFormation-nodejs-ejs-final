@@ -18,7 +18,6 @@
       <!-- Contenu des onglets -->
       <div class="tab-content" id="backOfficeTabContent">
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-
             <div class="row">
                 <form id="addServiceForm" class="col">
                     <%- include('includes/servicesFormBase') %>
@@ -36,12 +35,34 @@
                     <div class="row" style="margin-top: 20px; ">
                         <button type="submit" class="btn btn-primary col-3" >MODIFIER</button>
                         <div class="col-6" ></div>
-                        <button type="submit" class="btn btn-danger col-3">SUPPRIMER</button>
+                        <button id="deleteServiceButton" type="button" class="btn btn-danger col-3">SUPPRIMER</button>
                     </div>
                 </form>
             </div>
         </div>
-        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">Contenu des actualités</div>
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+          <div class="row">
+            <form id="addNewsForm" class="col">
+                <%- include('includes/newsFormBase') %>
+                <button type="submit" class="btn btn-primary" style="margin-top: 20px; ">CRÉER</button>
+            </form>
+            <form id="updNewsForm" class="col">
+                <div style="margin-bottom: 16px; "><%- include('includes/newsSelect') %></div>
+                <%- include('includes/newsFormBase') %>
+                <div class="form-check" style="margin-top: 10px; ">
+                    <input class="form-check-input" type="checkbox" value="" id="obsoleteNews" name="obsolete">
+                    <label class="form-check-label" for="obsolete">
+                      Obsolète
+                    </label>
+                </div>
+                <div class="row" style="margin-top: 20px; ">
+                    <button type="submit" class="btn btn-primary col-3" >MODIFIER</button>
+                    <div class="col-6" ></div>
+                    <button id="deleteNewsButton" type="button" class="btn btn-danger col-3">SUPPRIMER</button>
+                </div>
+            </form>
+        </div>
+        </div>
         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">Contenu des horaires</div>
       </div>
 <main>

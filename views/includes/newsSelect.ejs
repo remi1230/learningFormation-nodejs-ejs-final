@@ -1,0 +1,6 @@
+<label for="newsId" class="form-label">News</label>
+<select id="newsId" class="form-select" name="newsId" aria-label="Default select example">
+    <% news.forEach(function(theNews) { %>
+        <option value="<%= theNews.id %>"><%= theNews.title %></option>
+    <% }); %>
+</select>

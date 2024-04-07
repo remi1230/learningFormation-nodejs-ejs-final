@@ -15,6 +15,8 @@ const serviceCtrl = require('../controllers/service');
 
 //Routes
 router.get('/services', serviceCtrl.getAllServices);
+router.get('/getAllServicesInJSON', serviceCtrl.getAllServicesInJSON);
+router.get('/service/delete/:id', serviceCtrl.delete);
 router.get('/service/:id', serviceCtrl.getServiceById);
 router.post('/service/add', auth, serviceCtrl.add);
 router.put('/service/upd/:id', auth, serviceCtrl.update);
