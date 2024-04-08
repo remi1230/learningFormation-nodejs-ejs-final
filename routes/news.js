@@ -14,7 +14,9 @@ const auth     = require('../middleware/auth');
 const newsCtrl = require('../controllers/news');
 
 //Routes
-router.get('/news', newsCtrl.getAll);
+router.get('/news/json', newsCtrl.getAllNewsInJSON);
+router.get('/news/:id', newsCtrl.getNewsById);
+router.get('/news/delete/:id', newsCtrl.delete);
 router.post('/news/add', auth, newsCtrl.add);
 router.put('/news/upd/:id', auth, newsCtrl.update);
 

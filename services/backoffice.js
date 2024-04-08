@@ -4,6 +4,7 @@ const { Service, Schedules, News } = require('../model/index');
 async function getAllServices(req) {
     return await Service.findAll({
         where: { obsolete: 0 },
+        order: [['name', 'ASC']]
     })
 }
 
@@ -12,7 +13,9 @@ async function getAllSchedules(req) {
 }
 
 async function getAllNews(req) {
-    return await News.findAll()
+    return await News.findAll({
+        order: [['title', 'ASC']]
+    })
 }
 
 module.exports = { getAllServices, getAllSchedules, getAllNews };

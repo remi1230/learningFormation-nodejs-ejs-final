@@ -5,7 +5,9 @@ let glo = {
         takeAppointment: 'takeAppointment',
         connexion: 'connexion',
         service: 'service/',
-        servicesInJSON: 'getAllServicesInJSON',
+        servicesInJSON: 'services/json',
+        newsInJSON: 'news/json',
+        news: 'news/',
     },
     idsToUpd: {
         serviceId: 0,
@@ -13,8 +15,13 @@ let glo = {
 };
 
 let servicesHTMLSelect = document.getElementById('serviceId');
+let newsHTMLSelect     = document.getElementById('newsId');
 
-const getSelectMaxValue = (select = servicesHTMLSelect) => Math.max(...[...select.children].map(option => parseInt(option.value)));
+const getSelectMaxValue  = (select = servicesHTMLSelect) => Math.max(...[...select.children].map(option => parseInt(option.value)));
+const getSelectFirstValue = (HTMLSelect)=> [...HTMLSelect.children][0].value;
+
+const deleteService     = (serviceId) => { getInFetch(glo.urls.base + glo.urls.service + 'delete/' + serviceId, reloadServicesSelectAndInit); }
+const deleteNews        = (newsId)    => { getInFetch(glo.urls.base + glo.urls.news + 'delete/' + newsId, reloadNewsSelectAndInit); }
 
 //ÉVÈNEMENTS
 document.addEventListener('DOMContentLoaded', function() {
@@ -32,21 +39,21 @@ if(document.getElementById('takeAppointment')){
 }
 
 if(location.pathname === '/login' && servicesHTMLSelect){
-    servicesHTMLSelect.addEventListener('change', function(e){
-        getServiceInfos(e.target.value);
-    });
+    servicesHTMLSelect.addEventListener('change', function(e){ getServiceInfos(e.target.value); });
+    newsHTMLSelect.addEventListener('change', function(e){ getNewsInfos(e.target.value); });
     initServicesSelect();
+    initNewsSelect();
 
     //Services
     addListenerOnForm('addServiceForm', 'service/add', 'POST', false, reloadServicesSelectAndInit, function(){ return 'last'; });
     addListenerOnForm('updServiceForm', 'service/upd/', 'PUT', 'serviceId', reloadServicesSelectAndInit, function(){ return servicesHTMLSelect.value; }, ['obsolete']);
 
     //News
-    addListenerOnForm('addNewsForm', 'news/add', 'POST', false, reloadServicesSelectAndInit, function(){ return 'last'; });
+    addListenerOnForm('addNewsForm', 'news/add', 'POST', false, reloadNewsSelectAndInit, function(){ return 'last'; });
+    addListenerOnForm('updNewsForm', 'news/upd/', 'PUT', 'newsId', reloadNewsSelectAndInit, function(){ return newsHTMLSelect.value; }, ['obsolete']);
 
-    document.getElementById('deleteServiceButton').addEventListener('click', function(e){
-        deleteService(servicesHTMLSelect.value);
-    });
+    document.getElementById('deleteServiceButton').addEventListener('click', function(e){ deleteService(servicesHTMLSelect.value); });
+    document.getElementById('deleteNewsButton').addEventListener('click', function(e){ deleteNews(newsHTMLSelect.value); });
 }
 
 //FUNCTIONS
@@ -89,9 +96,13 @@ function addListenerOnForm(formId, enPoint, method = 'POST', idVarName = false, 
     }
 }
 
-function initServicesSelect(servicesSelect = servicesHTMLSelect, initValue = "1"){
+function initServicesSelect(servicesSelect = servicesHTMLSelect, initValue = getSelectFirstValue(servicesSelect)){
     servicesSelect.value = initValue;
     getServiceInfos(initValue);
+}
+function initNewsSelect(newsSelect = newsHTMLSelect, initValue = getSelectFirstValue(newsHTMLSelect)){
+    newsSelect.value = initValue;
+    getNewsInfos(initValue);
 }
 
 function getServiceInfos(serviceId){
@@ -116,8 +127,8 @@ function getServiceInfos(serviceId){
       });
 }
 
-function deleteService(serviceId){
-    fetch(glo.urls.base + glo.urls.service + 'delete/' + serviceId, {
+function getNewsInfos(newsId){
+    fetch(glo.urls.base + glo.urls.news + newsId, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -125,11 +136,32 @@ function deleteService(serviceId){
       })
       .then(response => response.json())
       .then(data => {
-        reloadServicesSelectAndInit();
+        const updForm = document.getElementById('updNewsForm');
+        updForm.querySelector('[name="title"]').value      = data.title;
+        updForm.querySelector('[name="content"]').value    = data.content;
+        updForm.querySelector('[name="obsolete"]').checked = data.obsolete;
+
+        glo.idsToUpd.newsId = newsId;
       })
       .catch((error) => {
         console.error('Erreur:', error);
       });
+}
+
+function getInFetch(url, successFunction, successFunctionParams){
+  fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  .then(response => response.json())
+  .then(data => {
+    successFunction(successFunctionParams ? successFunctionParams() : undefined);
+  })
+  .catch((error) => {
+    console.error('Erreur:', error);
+  });
 }
 
 async function reloadSelect(HTMLSelect, fetchURL, propForTxt){
@@ -143,8 +175,12 @@ async function reloadSelect(HTMLSelect, fetchURL, propForTxt){
       .then(data => {
         removeAllChildren(HTMLSelect);
 
-        const dataKey = Object.keys(data)[0];
-        datas         = data[dataKey];
+        let datas;
+        if(Array.isArray(data)){ datas = data; }
+        else{
+          const dataKey = Object.keys(data)[0];
+          datas         = data[dataKey];
+        }
         datas.sort((a, b) => { return a[propForTxt].localeCompare(b[propForTxt]); });
 
         datas.forEach(data => {
@@ -162,10 +198,18 @@ async function reloadSelect(HTMLSelect, fetchURL, propForTxt){
       });
 }
 
-async function reloadServicesSelectAndInit(serviceId = '1'){
+async function reloadServicesSelectAndInit(serviceId){
     await reloadSelect(servicesHTMLSelect, glo.urls.base + glo.urls.servicesInJSON, 'name');
     if(serviceId === 'last'){ serviceId = getSelectMaxValue(); }
+    else if(!serviceId){ getSelectFirstValue(servicesHTMLSelect); }
     initServicesSelect(servicesHTMLSelect, serviceId);
+}
+
+async function reloadNewsSelectAndInit(newsId){
+    await reloadSelect(newsHTMLSelect, glo.urls.base + glo.urls.newsInJSON, 'title');
+    if(newsId === 'last'){ newsId = getSelectMaxValue(newsHTMLSelect); }
+    else if(!newsId){ getSelectFirstValue(newsHTMLSelect); }
+    initNewsSelect(newsHTMLSelect, newsId);
 }
 
 function removeAllChildren(parent){

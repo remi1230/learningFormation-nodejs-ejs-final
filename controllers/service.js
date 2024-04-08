@@ -95,6 +95,7 @@ exports.getServiceById = (req, res, next) => {
 exports.getAllServices = (req, res, next) => {
     return Service.findAll({
         where: { obsolete: 0 },
+        order: [['name', 'ASC']]
     })
 };
 
@@ -106,7 +107,9 @@ exports.getAllServices = (req, res, next) => {
  * @param {Function} next - La fonction middleware à exécuter ensuite.
  */
 exports.getAllServicesInJSON = (req, res, next) => {
-    return Service.findAll()
+    return Service.findAll({
+        order: [['name', 'ASC']]
+    })
     .then(services => {
         if (!services) {
             return res.status(404).json({error: 'Aucun service en base !'});
@@ -126,6 +129,7 @@ exports.getAllServicesInJSON = (req, res, next) => {
 exports.getAllServicesWithPro  = () => {
     return Service.findAll({
         where: { obsolete: 0 },
+        order: [['name', 'ASC']],
         include: User,
         logging: console.log
     });

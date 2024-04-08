@@ -76,9 +76,30 @@ exports.update = (req, res, next) => {
  * @param {Object} res - L'objet de la réponse Express. Renvoie un message de succès en cas de mise à jour réussie.
  * @param {Function} next - La fonction middleware à exécuter ensuite.
  */
-exports.getAll = (req, res, next) => {
+exports.getAllNewsInJSON = (req, res, next) => {
     News.findAll({
-        where: { obsolete: 0 },
+        include: [{
+            model: User,
+            attributes: ['id', 'firstName', 'lastName', 'email', 'phoneNumber']
+        }]
+    })
+    .then(news => {
+        if (!news) {
+            return res.status(404).json({error: 'Aucune news trouvée !'});
+        }
+        res.status(200).json(news.sort((a, b) => a.title.localeCompare(b.title)));
+    })
+};
+
+ /**
+ * Récupère toutes les news
+ * 
+ * @param {Object} req - L'objet de la requête Express.
+ * @param {Object} res - L'objet de la réponse Express. Renvoie un message de succès en cas de mise à jour réussie.
+ * @param {Function} next - La fonction middleware à exécuter ensuite.
+ */
+ exports.getNewsById = (req, res, next) => {
+    News.findByPk(req.params.id, {
         include: [{
             model: User,
             attributes: ['id', 'firstName', 'lastName', 'email', 'phoneNumber']
@@ -90,4 +111,33 @@ exports.getAll = (req, res, next) => {
         }
         res.status(200).json(news);
     })
+    .catch(error => res.status(500).json({ error: 'Une erreur est survenue' })); // Gestion des erreurs
+};
+
+/**
+ * Supprime une news en base
+ * 
+ * @param {Object} req - L'objet de la requête Express.
+ * @param {Object} res - L'objet de la réponse Express. Renvoie un message de succès en cas de mise à jour réussie.
+ * @param {Function} next - La fonction middleware à exécuter ensuite.
+ */
+exports.delete = (req, res, next) => {
+    const id = req.params.id; // ou une autre logique pour obtenir l'ID
+  
+    // Modèle Sequelize pour l'objet que vous voulez supprimer, par exemple 'Item'
+    News.destroy({
+      where: { id: id } // condition de correspondance
+    })
+    .then(result => {
+      if (result === 0) {
+        // Aucun objet trouvé avec cet ID, ou rien à supprimer
+        return res.status(404).json({ message: 'News non trouvé' });
+      }
+      // La suppression a été effectuée
+      res.status(200).json({ message: 'News supprimé avec succès !' });
+    })
+    .catch(error => {
+      // Gérer l'erreur
+      res.status(500).json({ message: 'Une erreur est survenue durant la suppression', error });
+    });
 };
