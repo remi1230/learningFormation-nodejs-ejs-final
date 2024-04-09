@@ -1,0 +1,6 @@
+<label for="schedulesId" class="form-label">Jour</label>
+<select id="schedulesId" class="form-select" name="schedulesId" aria-label="Default select example">
+    <% schedules.forEach(function(schedule) { %>
+        <option value="<%= schedule.id %>"><%= schedule.dayOfWeek %></option>
+    <% }); %>
+</select>

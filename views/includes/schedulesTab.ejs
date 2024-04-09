@@ -1,0 +1,18 @@
+<div class="tab-pane fade" id="schedulesTab" role="tabpanel" aria-labelledby="schedules-tab">
+  <div class="row">
+    <form id="addSchedulesForm" class="col">
+        <%- include('schedulesSelectNotInBase') %>
+        <%- include('schedulesFormBase') %>
+        <button type="submit" class="btn btn-primary" style="margin-top: 20px; ">CRÉER</button>
+    </form>
+    <form id="updSchedulesForm" class="col">
+        <%- include('schedulesDays') %>
+        <%- include('schedulesFormBase') %>
+        <div class="row" style="margin-top: 20px; ">
+            <button type="submit" class="btn btn-primary col-3" >MODIFIER</button>
+            <div class="col-6" ></div>
+            <button id="deleteSchedulesButton" type="button" class="btn btn-danger col-3">SUPPRIMER</button>
+        </div>
+    </form>
+  </div>
+</div>

@@ -1,10 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
-  class Schedule extends DataTypes.Model {}
+  class Schedules extends DataTypes.Model {}
 
-  Schedule.init({
+  Schedules.init({
     dayOfWeek: {
       type: DataTypes.ENUM('Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'),
-      allowNull: false
+      allowNull: false,
+      unique: true
     },
     openTime: {
       type: DataTypes.TIME,
@@ -13,11 +14,15 @@ module.exports = (sequelize, DataTypes) => {
     closeTime: {
       type: DataTypes.TIME,
       allowNull: false
+    },
+    order: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   }, {
     sequelize,
     modelName: 'Schedule'
   });
 
-  return Schedule;
+  return Schedules;
 }

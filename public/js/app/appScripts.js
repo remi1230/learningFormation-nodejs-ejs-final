@@ -1,3 +1,5 @@
+const getById = id => document.getElementById(id);
+
 //Variables globales
 let glo = {
     urls: {
@@ -7,33 +9,36 @@ let glo = {
         service: 'service/',
         servicesInJSON: 'services/json',
         newsInJSON: 'news/json',
+        schedulesInJSON: 'schedules/json',
         news: 'news/',
+        schedules: 'schedules/',
     },
     idsToUpd: {
         serviceId: 0,
     }
 };
 
-let servicesHTMLSelect = document.getElementById('serviceId');
-let newsHTMLSelect     = document.getElementById('newsId');
+let servicesHTMLSelect  = getById('serviceId');
+let newsHTMLSelect      = getById('newsId');
+let schedulesHTMLSelect = getById('updSchedulesForm') ? getById('updSchedulesForm').querySelector('[name="schedulesId"]') : undefined;
 
-const getSelectMaxValue  = (select = servicesHTMLSelect) => Math.max(...[...select.children].map(option => parseInt(option.value)));
-const getSelectFirstValue = (HTMLSelect)=> [...HTMLSelect.children][0].value;
-
-const deleteService     = (serviceId) => { getInFetch(glo.urls.base + glo.urls.service + 'delete/' + serviceId, reloadServicesSelectAndInit); }
-const deleteNews        = (newsId)    => { getInFetch(glo.urls.base + glo.urls.news + 'delete/' + newsId, reloadNewsSelectAndInit); }
+const getSelectMaxValue   = (select = servicesHTMLSelect) => Math.max(...[...select.children].map(option => parseInt(option.value)));
+const getSelectFirstValue = (HTMLSelect)  => [...HTMLSelect.children][0].value;
+const deleteService       = (serviceId)   => { getInFetch(glo.urls.base + glo.urls.service + 'delete/' + serviceId, reloadServicesSelectAndInit); }
+const deleteNews          = (newsId)      => { getInFetch(glo.urls.base + glo.urls.news + 'delete/' + newsId, reloadNewsSelectAndInit); }
+const deleteSchedules     = (schedulesId) => { getInFetch(glo.urls.base + glo.urls.schedules + 'delete/' + schedulesId, reloadSchedulesSelectAndInit); }
 
 //ÉVÈNEMENTS
 document.addEventListener('DOMContentLoaded', function() {
-    let appointmentDone = document.getElementById('appointmentDone');
+    let appointmentDone = getById('appointmentDone');
     if(appointmentDone && appointmentDone.style.display === 'block'){ fadeOut(appointmentDone); }
 });
 
-if(document.getElementById('takeAppointment')){
-    document.getElementById('takeAppointment').addEventListener('click', function(e){
+if(getById('takeAppointment')){
+    getById('takeAppointment').addEventListener('click', function(e){
         window.open(glo.urls.base + glo.urls.takeAppointment, '_blank');
     });
-    document.getElementById('connexion').addEventListener('click', function(e){
+    getById('connexion').addEventListener('click', function(e){
         window.open(glo.urls.base + glo.urls.connexion, '_blank');
     });
 }
@@ -41,8 +46,10 @@ if(document.getElementById('takeAppointment')){
 if(location.pathname === '/login' && servicesHTMLSelect){
     servicesHTMLSelect.addEventListener('change', function(e){ getServiceInfos(e.target.value); });
     newsHTMLSelect.addEventListener('change', function(e){ getNewsInfos(e.target.value); });
+    schedulesHTMLSelect.addEventListener('change', function(e){ getSchedulesInfos(e.target.value); });
     initServicesSelect();
     initNewsSelect();
+    initSchedulesSelect();
 
     //Services
     addListenerOnForm('addServiceForm', 'service/add', 'POST', false, reloadServicesSelectAndInit, function(){ return 'last'; });
@@ -52,16 +59,22 @@ if(location.pathname === '/login' && servicesHTMLSelect){
     addListenerOnForm('addNewsForm', 'news/add', 'POST', false, reloadNewsSelectAndInit, function(){ return 'last'; });
     addListenerOnForm('updNewsForm', 'news/upd/', 'PUT', 'newsId', reloadNewsSelectAndInit, function(){ return newsHTMLSelect.value; }, ['obsolete']);
 
-    document.getElementById('deleteServiceButton').addEventListener('click', function(e){ deleteService(servicesHTMLSelect.value); });
-    document.getElementById('deleteNewsButton').addEventListener('click', function(e){ deleteNews(newsHTMLSelect.value); });
+    //Schedules
+    addListenerOnForm('addSchedulesForm', 'schedules/addOrUpd', 'POST', false, reloadSchedulesSelectAndInit, function(){ return 'last'; });
+    addListenerOnForm('updSchedulesForm', 'schedules/addOrUpd', 'POST', false, reloadSchedulesSelectAndInit, function(){ return schedulesHTMLSelect.value; });
+
+    //Suppression Service, News et Schedules
+    getById('deleteServiceButton').addEventListener('click', function(e){ deleteService(servicesHTMLSelect.value); });
+    getById('deleteNewsButton').addEventListener('click', function(e){ deleteNews(newsHTMLSelect.value); });
+    getById('deleteSchedulesButton').addEventListener('click', function(e){ deleteSchedules(schedulesHTMLSelect.value); });
 }
 
 //FUNCTIONS
-function addListenerOnForm(formId, enPoint, method = 'POST', idVarName = false, successFunction = false, successFunctionParams = undefined, checkboxesId = []){
-    let form = document.getElementById(formId);
+function addListenerOnForm(formId, enPoint, method = 'POST', idVarName = false, successFunction = false, successFunctionParams = undefined, checkboxesNames = []){
+    let form = getById(formId);
   
     if(form){
-        document.getElementById(formId).addEventListener('submit', function(e) {
+        getById(formId).addEventListener('submit', function(e) {
         e.preventDefault();
         
         const token = getCookie('token');
@@ -70,8 +83,8 @@ function addListenerOnForm(formId, enPoint, method = 'POST', idVarName = false, 
         
           var object = {};
           formData.forEach((value, key) => { object[key] = value });
-          checkboxesId.forEach(checkboxId => {
-            object[checkboxId] = document.getElementById(checkboxId).checked;
+          checkboxesNames.forEach(checkboxName => {
+            object[checkboxName] = form.querySelector(`[name="${ checkboxName }"]`).checked;
           });
           var jsonData = JSON.stringify(object);
   
@@ -104,6 +117,10 @@ function initNewsSelect(newsSelect = newsHTMLSelect, initValue = getSelectFirstV
     newsSelect.value = initValue;
     getNewsInfos(initValue);
 }
+function initSchedulesSelect(schedulesSelect = schedulesHTMLSelect, initValue = getSelectFirstValue(schedulesHTMLSelect)){
+    schedulesSelect.value = initValue;
+    getSchedulesInfos(initValue);
+}
 
 function getServiceInfos(serviceId){
     fetch(glo.urls.base + glo.urls.service + serviceId, {
@@ -114,7 +131,7 @@ function getServiceInfos(serviceId){
       })
       .then(response => response.json())
       .then(data => {
-        const updForm = document.getElementById('updServiceForm');
+        const updForm = getById('updServiceForm');
         updForm.querySelector('[name="name"]').value        = data.service.name;
         updForm.querySelector('[name="description"]').value = data.service.description;
         updForm.querySelector('[name="detail"]').value      = data.service.detail;
@@ -136,12 +153,32 @@ function getNewsInfos(newsId){
       })
       .then(response => response.json())
       .then(data => {
-        const updForm = document.getElementById('updNewsForm');
+        const updForm = getById('updNewsForm');
         updForm.querySelector('[name="title"]').value      = data.title;
         updForm.querySelector('[name="content"]').value    = data.content;
         updForm.querySelector('[name="obsolete"]').checked = data.obsolete;
 
         glo.idsToUpd.newsId = newsId;
+      })
+      .catch((error) => {
+        console.error('Erreur:', error);
+      });
+}
+
+function getSchedulesInfos(schedulesId){
+    fetch(glo.urls.base + glo.urls.schedules + schedulesId, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => response.json())
+      .then(data => {
+        const updForm = getById('updSchedulesForm');
+        updForm.querySelector('[name="openTime"]').value  = data.openTime;
+        updForm.querySelector('[name="closeTime"]').value = data.closeTime;
+
+        glo.idsToUpd.schedulesId = schedulesId;
       })
       .catch((error) => {
         console.error('Erreur:', error);
@@ -164,7 +201,7 @@ function getInFetch(url, successFunction, successFunctionParams){
   });
 }
 
-async function reloadSelect(HTMLSelect, fetchURL, propForTxt){
+async function reloadSelect(HTMLSelect, fetchURL, propForTxt, sortByPropForTxt = true){
     await fetch(fetchURL, {
         method: 'GET',
         headers: {
@@ -181,7 +218,7 @@ async function reloadSelect(HTMLSelect, fetchURL, propForTxt){
           const dataKey = Object.keys(data)[0];
           datas         = data[dataKey];
         }
-        datas.sort((a, b) => { return a[propForTxt].localeCompare(b[propForTxt]); });
+        if(sortByPropForTxt){ datas.sort((a, b) => { return a[propForTxt].localeCompare(b[propForTxt]); }); }
 
         datas.forEach(data => {
             let option = document.createElement('option');
@@ -212,6 +249,13 @@ async function reloadNewsSelectAndInit(newsId){
     initNewsSelect(newsHTMLSelect, newsId);
 }
 
+async function reloadSchedulesSelectAndInit(schedulesId){
+    await reloadSelect(schedulesHTMLSelect, glo.urls.base + glo.urls.schedulesInJSON, 'dayOfWeek', false);
+    if(schedulesId === 'last'){ schedulesId = getSelectMaxValue(schedulesHTMLSelect); }
+    else if(!schedulesId){ getSelectFirstValue(schedulesHTMLSelect); }
+    initSchedulesSelect(schedulesHTMLSelect, schedulesId);
+}
+
 function removeAllChildren(parent){
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
@@ -229,6 +273,7 @@ function getCookie(name) {
     return "";
 }
 
+
 function fadeOut(element) {
     let opacite = 1;
 
@@ -244,3 +289,20 @@ function fadeOut(element) {
     }
     requestAnimationFrame(step);
 }
+
+
+
+
+// TESTS FUNCTIONS
+const fillRDV = () => {
+  [
+    {id: 'email', value: 'forTest@test.fr'},
+    {id: 'firstName', value: 'Jean'},
+    {id: 'lastName', value: 'Dubidon'},
+    {id: 'phoneNumber', value: '0512123434'},
+    {id: 'date', value: '2024-05-17'},
+    {id: 'time', value: '10:30:00'},
+  ].map(infosRDV => {
+    getById(infosRDV.id).value = infosRDV.value;
+  });
+};

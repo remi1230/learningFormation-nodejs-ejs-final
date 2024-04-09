@@ -34,13 +34,15 @@ exports.add = async (req, res, next) => {
         }
         const serviceId = req.body.serviceId;
         const date      = req.body.date;
+        const time      = req.body.time;
         const status    = 'pending';
 
         await Appointment.create({
-            userId: user.id,
-            serviceId: serviceId,
-            date: date,
-            status: status
+            userId    : user.id,
+            serviceId : serviceId,
+            date      : date,
+            time      : time,
+            status    : status
         });
         //res.status(201).json({message: 'Appointment enregistré !'});
         takeAppointmentPage(req, res, next);

@@ -13,13 +13,29 @@ const jwt = require('jsonwebtoken');
  */
 module.exports = (req, res, next) => {
     try {
-        // Extraction du token JWT de l'en-tête d'autorisation
-        const token = req.headers.authorization.split(' ')[1];
+        // Extraction du token JWT de l'en-tête cookie
+        // Extraction du cookie
+        const cookieHeader = req.headers.cookie || '';
+        // Découpage du cookie pour trouver le token
+        const cookies = cookieHeader.split(';').reduce((acc, cookie) => {
+            const [key, value] = cookie.split('=').map(part => part.trim());
+            acc[key] = value;
+            return acc;
+        }, {});
+        
+        // Vérification de l'existence du token dans les cookies
+        if (!cookies.token) {
+            throw 'Token manquant dans les cookies';
+        }
+        
+        // Utilisation du token présent dans le cookie
+        const token = cookies.token;
         // Vérification du token à l'aide de la clé secrète
         const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
         // Extraction de l'ID de l'utilisateur et de son rôle du token décodé
         const userId   = decodedToken.userId;
         const userRole = decodedToken.userRole;
+
         // Ajout des informations d'authentification à l'objet de la requête
         req.auth = {
             userId: userId,

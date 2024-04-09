@@ -1,0 +1,23 @@
+<div class="tab-pane fade show active" id="serviceTab" role="tabpanel" aria-labelledby="service-tab">
+    <div class="row">
+        <form id="addServiceForm" class="col">
+            <%- include('servicesFormBase') %>
+            <button type="submit" class="btn btn-primary" style="margin-top: 20px; ">CRÉER</button>
+        </form>
+        <form id="updServiceForm" class="col">
+            <div style="margin-bottom: 16px; "><%- include('servicesSelect') %></div>
+            <%- include('servicesFormBase') %>
+            <div class="form-check" style="margin-top: 10px; ">
+                <input class="form-check-input" type="checkbox" value="" id="obsolete" name="obsolete">
+                <label class="form-check-label" for="obsolete">
+                  Obsolète
+                </label>
+            </div>
+            <div class="row" style="margin-top: 20px; ">
+                <button type="submit" class="btn btn-primary col-3" >MODIFIER</button>
+                <div class="col-6" ></div>
+                <button id="deleteServiceButton" type="button" class="btn btn-danger col-3">SUPPRIMER</button>
+            </div>
+        </form>
+    </div>
+</div>

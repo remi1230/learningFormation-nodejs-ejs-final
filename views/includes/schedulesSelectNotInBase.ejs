@@ -1,0 +1,6 @@
+<label for="dayOfWeek" class="form-label">Jour</label>
+<select id="dayOfWeek" class="form-select" name="dayOfWeek" aria-label="Default select example">
+    <% schedulesNotInBase.forEach(function(schedule) { %>
+        <option value="<%= schedule %>"><%= schedule %></option>
+    <% }); %>
+</select>

@@ -6,6 +6,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false
     },
+    time: {
+      type: DataTypes.TIME,
+      allowNull: false
+    },
     status: {
       type: DataTypes.ENUM('pending', 'approved', 'declined'),
       allowNull: false

@@ -3,7 +3,7 @@
 const db   = require('../model');
 const User = db.User;
 
-const { getAllServices, getAllSchedules, getAllNews } = require('../services/backoffice');
+const { getAllServices, getAllSchedules, getAllSchedulesNotInBase, getAllNews, getAllAppointments } = require('../services/backoffice');
 
 // Importation des modules `bcrypt` et `jsonwebtoken`.
 // `bcrypt` est utilisé pour le hachage sécurisé des mots de passe.
@@ -72,7 +72,6 @@ exports.createUser = (userData) => {
 exports.login = (req, res, next) => {
     User.findOne({where: { email: req.body.email }})
         .then(user => {
-            console.log(user)
             if (!user) {
                 res.render('wrongPassword');
             }
@@ -92,14 +91,17 @@ exports.login = (req, res, next) => {
                         { expiresIn: '24h' }
                     );
 
-                    const services  = await getAllServices(req);
-                    const schedules = await getAllSchedules(req);
-                    const news      = await getAllNews(req);
+                    const services     = await getAllServices(req);
+                    const schedules    = await getAllSchedules(req);
+                    const news         = await getAllNews(req);
+                    const appointments = await getAllAppointments(req);
+
+                    const schedulesNotInBase = await getAllSchedulesNotInBase();
 
                     services.sort((a, b) => { return a.name.localeCompare(b.name); });
 
                     res.cookie('token', token, { httpOnly: false, maxAge: 24 * 60 * 60 * 1000 });
-                    res.render('backOffice', { user, services, schedules, news });
+                    res.render('backOffice', { user, services, schedules, schedulesNotInBase, news, appointments });
                 })
                 .catch(error => res.status(500).json({ error }));
             }

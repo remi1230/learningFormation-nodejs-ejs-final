@@ -3,30 +3,7 @@
     <h1 class="center">Cabinet du docteur Dupont - PRENDRE RDV</h1>
     <div class="container centerFlex">
         <form id="takeAppointmentForm" action="/appointment/add" method="post">
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" name="userEmail" class="form-control" id="email" aria-describedby="emailHelp">
-                <div id="emailHelp" class="form-text">Nous nous engageons à ne pas communiquer votre email.</div>
-            </div>
-            <div class="mb-3">
-                <label for="firstName" class="form-label">Prénom</label>
-                <input type="text" class="form-control" id="firstName" name="userFirstName">
-            </div>
-            <div class="mb-3">
-                <label for="lastName" class="form-label">Nom</label>
-                <input type="text" class="form-control" id="lastName" name="userLastName">
-            </div>
-            <div class="mb-3">
-                <label for="phoneNumber" class="form-label">Téléphone</label>
-                <input type="text" class="form-control" id="phoneNumber" name="userPhoneNumber">
-            </div>
-            <div class="mb-3">
-                <%- include('includes/servicesSelect') %>
-            </div>
-            <div class="mb-3">
-                <label for="date">Date</label>
-                <input id="date" name="date" class="form-control" type="date"/>
-            </div>
+            <%- include('includes/appointmentFormBase') %>
             <button type="submit" class="btn btn-primary">PRENDRE RDV</button>
         </form>
     </div>

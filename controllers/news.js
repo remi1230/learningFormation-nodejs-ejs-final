@@ -59,8 +59,13 @@ exports.update = (req, res, next) => {
         const updateValues = {
             title    : title   !== undefined ? title   : news.title,
             content  : content !== undefined ? content : news.content,
-            obsolete : obsolete !== undefined ? obsolete : news.obsolete,
         };
+
+        // Vérifie explicitement si 'obsolete' est présent dans le corps de la requête
+        if (req.body.hasOwnProperty('obsolete')) {
+            console.log({ obsolete });
+            updateValues.obsolete = obsolete;
+        }
         
         news.update(updateValues)
         .then(() => res.status(200).json({message: 'News mis à jour !'}))
@@ -92,7 +97,7 @@ exports.getAllNewsInJSON = (req, res, next) => {
 };
 
  /**
- * Récupère toutes les news
+ * Récupère une news par son ID
  * 
  * @param {Object} req - L'objet de la requête Express.
  * @param {Object} res - L'objet de la réponse Express. Renvoie un message de succès en cas de mise à jour réussie.

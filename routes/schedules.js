@@ -15,6 +15,9 @@ const schedulesCtrl = require('../controllers/schedules');
 
 //Routes
 router.get('/schedules', schedulesCtrl.getAll);
+router.get('/schedules/json', schedulesCtrl.getAllSchedulesInJSON);
+router.get('/schedules/:id', schedulesCtrl.getSchedulesById);
+router.get('/schedules/delete/:id', auth, schedulesCtrl.delete);
 router.post('/schedules/addOrUpd', auth, schedulesCtrl.addOrUpdate);
 router.delete('/schedules/deleteByDayOfWeek/:dayOfWeek', auth, schedulesCtrl.deleteByDayOfWeek);
 
