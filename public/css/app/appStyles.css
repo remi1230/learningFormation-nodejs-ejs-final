@@ -36,6 +36,10 @@ footer{
 .justify{
     text-align: justify;
 }
+.newsItem{
+    font-size: 14px;
+    color: #999;
+}
 
 #carouselClinic{
     width: 421px;

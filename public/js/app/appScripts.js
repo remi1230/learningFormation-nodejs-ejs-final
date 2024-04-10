@@ -80,6 +80,29 @@ if(location.pathname === '/login' && servicesHTMLSelect){
     getById('deleteNewsButton').addEventListener('click', function(e){ deleteNews(newsHTMLSelect.value); });
     getById('deleteSchedulesButton').addEventListener('click', function(e){ deleteSchedules(schedulesHTMLSelect.value); });
 }
+else if(location.pathname === '/service'){
+    const serviceHTMLItem = {
+        select    : getById('serviceId'),
+        cardTitle : getById('serviceDescription'),
+        cardText  : getById('serviceDetail'),
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const serviceSelectFirstId   = getSelectFirstValue(serviceHTMLItem.select);
+        serviceHTMLItem.select.value = serviceSelectFirstId;
+        
+        showServiceById(serviceSelectFirstId);
+    });
+
+    getById('serviceId').addEventListener('change', function(e){ showServiceById(e.target.value); });
+
+    function showServiceById(serviceId){
+        const service = services.find(service => service.id == serviceId);
+
+        serviceHTMLItem.cardTitle.textContent = service.description;
+        serviceHTMLItem.cardText.textContent  = service.detail;
+    }
+}
 
 //FUNCTIONS
 function addListenerOnForm(formId, enPoint, method = 'POST', idVarName = false, successFunction = false, successFunctionParams = undefined, checkboxesNames = []){

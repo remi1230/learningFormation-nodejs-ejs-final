@@ -1,0 +1,29 @@
+<%- include('includes/header') %>
+
+<main>
+    <div class="container" style="min-height: 800px;">
+        <h1 class="center">Les actualités du cabinet</h1>
+        <div class="">
+            <% news.forEach(function(theNews) { %>
+                <div class="d-flex justify-content-center">
+                    <div class="card" style="width: 54rem; margin-top: 25px; ">
+                        <div class="card-body">
+                        <h5 class="card-title center">
+                            <span><%= theNews.title %></span>
+                            <span class="newsItem" style="float: right; ">
+                                <span><%= theNews.author %></span>
+                                <span>- <%= theNews.date %></span>
+                                <span><%= theNews.time %></span> 
+                            </span>
+                            
+                        </h5>
+                        <p class="card-text"><%= theNews.content %></p>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+<main>
+    
+<%- include('includes/footer') %>

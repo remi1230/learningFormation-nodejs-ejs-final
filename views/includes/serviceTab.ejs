@@ -5,7 +5,14 @@
             <button type="submit" class="btn btn-primary" style="margin-top: 20px; ">CRÉER</button>
         </form>
         <form id="updServiceForm" class="col">
-            <div style="margin-bottom: 16px; "><%- include('servicesSelect') %></div>
+            <div style="margin-bottom: 16px; ">
+                <label for="serviceId" class="form-label">Service</label>
+                <select id="serviceId" class="form-select" name="serviceId" aria-label="Default select example">
+                    <% services.forEach(function(service) { %>
+                        <option value="<%= service.id %>"><%= service.name %></option>
+                    <% }); %>
+                </select>
+            </div>
             <%- include('servicesFormBase') %>
             <div class="form-check" style="margin-top: 10px; ">
                 <input class="form-check-input" type="checkbox" value="" id="obsolete" name="obsolete">

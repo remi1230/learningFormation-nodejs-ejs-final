@@ -1,11 +1,11 @@
 //Importation des modèles représentant la structure des données en BDD
 const { Service, Schedules, News, Appointment, User } = require('../model/index');
 
-async function getAllServices(req) {
-    return await Service.findAll({
-        where: { obsolete: 0 },
-        order: [['name', 'ASC']]
-    })
+async function getAllServices(req, withObsoletes = true) {
+    let options = { order: [['name', 'ASC']] };
+    if(!withObsoletes){ options.where = { obsolete: 0 }; }
+
+    return await Service.findAll(options);
 }
 
 async function getAllSchedules(req) {
@@ -23,10 +23,34 @@ async function getAllSchedulesNotInBase() {
     return daysToReturn;
 }
 
-async function getAllNews(req) {
-    return await News.findAll({
-        order: [['title', 'ASC']]
-    })
+async function getAllNews(req, withObsoletes = true) {
+    let options = {
+        include: [
+            {
+                model: User,
+                attributes: ['id', 'firstName', 'lastName']
+            },
+        ],
+        order: [['createdAt', 'DESC']]
+    };
+    if(!withObsoletes){ options.where = { obsolete: 0 }; }
+
+    let news = await News.findAll(options);
+
+    //console.log((news[0].createdAt).getDate());
+
+    news.forEach(theNews => {
+        const fullDate     = dateToStrFr(theNews.createdAt, true);
+        const [date, time] = fullDate.split(' ');
+
+        theNews.author = theNews.User.firstName + ' ' + theNews.User.lastName;
+
+        theNews.fullTitle = fullDate + ' - ' + theNews.title + ' - ' + theNews.User.firstName + ' ' + theNews.User.lastName;
+        theNews.date = date;
+        theNews.time = time;
+    });
+
+    return news;
 }
 
 async function getAllPatients(req) {
@@ -61,12 +85,19 @@ async function getAllAppointments(req) {
     return appointments;
 }
 
-function dateToStrFr(date){
-    let day   = date.getDate().toString().padStart(2, '0');
-    let month = (date.getMonth() + 1).toString().padStart(2, '0');
-    let year  = date.getFullYear();
+function dateToStrFr(date, withTime = false){
+    const day   = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year  = date.getFullYear();
 
-    return `${day}/${month}/${year}`; 
+    let dateToReturn = `${day}/${month}/${year}`;
+    if(withTime){
+        const hours   = date.getHours();
+        const minutes = date.getMinutes();
+        dateToReturn += ` ${hours}:${minutes}`;
+    }
+
+    return dateToReturn; 
 }
 
 function dateToStrUS(date){

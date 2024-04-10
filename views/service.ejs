@@ -1,0 +1,21 @@
+<script>const services = <%- JSON.stringify(services) %>;</script>
+<%- include('includes/header') %>
+
+<main>
+    <div class="container" style="min-height: 800px;">
+        <h1 class="center">Les services du cabinet</h1>
+        <div class="row" style="margin-bottom: 40px; ">
+            <%- include('includes/servicesSelect') %>        
+        </div>
+        <div class="d-flex justify-content-center">
+            <div class="card" style="width: 54rem;">
+                <div class="card-body">
+                <h5 id="serviceDescription" class="card-title center"></h5>
+                <p id="serviceDetail" class="card-text"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+<main>
+    
+<%- include('includes/footer') %>
