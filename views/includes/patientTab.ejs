@@ -1,0 +1,15 @@
+<div class="tab-pane fade" id="patientTab" role="tabpanel" aria-labelledby="patient-tab">
+    <div class="row">
+      <form id="patientForm" class="col">
+        <label for="patientId" class="form-label">Patients</label>
+        <select id="patientId" class="form-select" name="patientId" aria-label="Default select example" style="margin-bottom: 20px; ">
+            <% patients.forEach(function(patient) { %>
+                <option value="<%= patient.id %>">
+                    <%= patient.firstName + ' ' + patient.lastName %>
+                </option>
+            <% }); %>
+        </select>
+        <%- include('patientFormBase') %>
+      </form>
+    </div>
+</div>

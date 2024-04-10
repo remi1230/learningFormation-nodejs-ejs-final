@@ -2,7 +2,6 @@
     <label for="email" class="form-label">Email</label>
     <input type="email" name="userEmail" class="form-control" id="email" aria-describedby="emailHelp"
     <% if (typeof toUpd !== 'undefined') { %>disabled="disabled"<% } %> >
-    <% if (typeof toUpd === 'undefined') { %><div id="emailHelp" class="form-text">Nous nous engageons à ne pas communiquer votre email.</div><% } %>
 </div>
 <div class="mb-3">
     <label for="firstName" class="form-label">Prénom</label>
@@ -18,15 +17,4 @@
     <label for="phoneNumber" class="form-label">Téléphone</label>
     <input type="text" class="form-control" id="phoneNumber" name="userPhoneNumber"
     <% if (typeof toUpd !== 'undefined') { %>disabled="disabled"<% } %> >
-</div>
-<div class="mb-3">
-    <%- include('servicesSelect') %>
-</div>
-<div class="mb-3">
-    <label for="date">Date</label>
-    <input id="date" name="date" class="form-control" type="date" <% if (typeof toUpd !== 'undefined') { %>disabled="disabled"<% } %> >
-</div>
-<div class="mb-3">
-    <label for="time">Heure</label>
-    <input id="time" name="time" class="form-control" type="time" <% if (typeof toUpd !== 'undefined') { %>disabled="disabled"<% } %> >
 </div>

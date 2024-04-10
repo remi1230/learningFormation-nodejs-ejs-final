@@ -1,11 +1,11 @@
 <div class="tab-pane fade" id="appointmentTab" role="tabpanel" aria-labelledby="appointment-tab">
     <div class="row">
-      <form id="addAppointmentForm" class="col">
+      <form id="updAppointmentForm" class="col">
         <label for="appointmentId" class="form-label">RDV</label>
         <select id="appointmentId" class="form-select" name="appointmentId" aria-label="Default select example" style="margin-bottom: 20px; ">
             <% appointments.forEach(function(appointment) { %>
                 <option value="<%= appointment.id %>">
-                    <%= appointment.User.firstName  + ' ' + appointment.User.lastName + ' - ' + appointment.frenchDate + ' - ' + appointment.frenchTime %>
+                    <%= appointment.title %>
                 </option>
             <% }); %>
         </select>

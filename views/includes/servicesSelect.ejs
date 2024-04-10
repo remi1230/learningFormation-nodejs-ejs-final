@@ -1,5 +1,6 @@
 <label for="serviceId" class="form-label">Service</label>
-<select id="serviceId" class="form-select" name="serviceId" aria-label="Default select example">
+<select id="serviceId" class="form-select" name="serviceId" aria-label="Default select example"
+<% if (typeof toUpd !== 'undefined') { %>disabled="disabled"<% } %> >
     <% services.forEach(function(service) { %>
         <option value="<%= service.id %>"><%= service.name %></option>
     <% }); %>

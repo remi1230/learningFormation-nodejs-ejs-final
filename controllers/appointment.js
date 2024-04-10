@@ -6,6 +6,7 @@ const User        = db.User;
 
 const { createUser }          = require('./user');
 const { takeAppointmentPage } = require('./main');
+const { getAllAppointments }  = require('../services/backoffice');
 
 /**
  * Crée un nouveau appointment.
@@ -88,25 +89,18 @@ exports.update = (req, res, next) => {
  * @param {Object} res - L'objet de la réponse Express. Renvoie un message de succès en cas de mise à jour réussie.
  * @param {Function} next - La fonction middleware à exécuter ensuite.
  */
-exports.getAll = (req, res, next) => {
-    Appointment.findAll({
-        include: [
-            {
-                model: User,
-                attributes: ['id', 'firstName', 'lastName', 'email', 'phoneNumber']
-            },
-            {
-                model: Service,
-                attributes: ['id', 'name', 'description']
-            }
-        ]
-    })
-    .then(appointment => {
-        if (!appointment) {
-            return res.status(404).json({error: 'Aucune appointment trouvée !'});
+exports.getAll = async (req, res, next) => {
+    try {
+        const appointments  = await getAllAppointments(req);
+
+        if (!appointments) {
+            return res.status(404).json({error: 'Aucun RDV trouvé !'});
         }
-        res.status(200).json(appointment);
-    })
+        res.status(200).json(appointments);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Une erreur est survenue");
+    }
 };
 
  /**
@@ -148,6 +142,34 @@ exports.getByService = (req, res, next) => {
 exports.getByPatient = (req, res, next) => {
     Appointment.findAll({
         where: { userId: req.params.patientId },
+        include: [
+            {
+                model: User,
+                attributes: ['id', 'firstName', 'lastName', 'email', 'phoneNumber']
+            },
+            {
+                model: Service,
+                attributes: ['id', 'name', 'description']
+            }
+        ]
+    })
+    .then(appointment => {
+        if (!appointment) {
+            return res.status(404).json({error: 'Aucun appointment trouvée !'});
+        }
+        res.status(200).json(appointment);
+    })
+};
+
+ /**
+ * Récupère un RDV par ID
+ * 
+ * @param {Object} req - L'objet de la requête Express.
+ * @param {Object} res - L'objet de la réponse Express. Renvoie un message de succès en cas de mise à jour réussie.
+ * @param {Function} next - La fonction middleware à exécuter ensuite.
+ */
+exports.getById = (req, res, next) => {
+    Appointment.findByPk(req.params.id, {
         include: [
             {
                 model: User,

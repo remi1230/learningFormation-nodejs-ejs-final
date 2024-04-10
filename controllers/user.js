@@ -3,7 +3,7 @@
 const db   = require('../model');
 const User = db.User;
 
-const { getAllServices, getAllSchedules, getAllSchedulesNotInBase, getAllNews, getAllAppointments } = require('../services/backoffice');
+const { getAllServices, getAllSchedules, getAllSchedulesNotInBase, getAllNews, getAllAppointments, getAllPatients } = require('../services/backoffice');
 
 // Importation des modules `bcrypt` et `jsonwebtoken`.
 // `bcrypt` est utilisé pour le hachage sécurisé des mots de passe.
@@ -95,16 +95,37 @@ exports.login = (req, res, next) => {
                     const schedules    = await getAllSchedules(req);
                     const news         = await getAllNews(req);
                     const appointments = await getAllAppointments(req);
+                    const patients     = await getAllPatients(req);
 
                     const schedulesNotInBase = await getAllSchedulesNotInBase();
+
+                    const toUpd = true;
 
                     services.sort((a, b) => { return a.name.localeCompare(b.name); });
 
                     res.cookie('token', token, { httpOnly: false, maxAge: 24 * 60 * 60 * 1000 });
-                    res.render('backOffice', { user, services, schedules, schedulesNotInBase, news, appointments });
+                    res.render('backOffice', { user, services, schedules, schedulesNotInBase, news, appointments, patients, toUpd });
                 })
                 .catch(error => res.status(500).json({ error }));
             }
         })
         .catch(error => res.status(500).json({ error }));
  };
+
+ /**
+ * Récupère un service
+ * 
+ * @param {Object} req - L'objet de la requête Express.
+ * @param {Object} res - L'objet de la réponse Express. Renvoie un message de succès en cas de mise à jour réussie.
+ * @param {Function} next - La fonction middleware à exécuter ensuite.
+ */
+exports.getPatientById = (req, res, next) => {
+    User.findByPk(req.params.id)
+    .then(user => {
+        if (!user) {
+            return res.status(404).json({error: 'Patient non trouvé !'});
+        }
+        return res.status(200).json({user});
+    })
+    .catch(error => res.status(400).json({error}));
+};

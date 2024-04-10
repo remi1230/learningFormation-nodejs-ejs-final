@@ -19,6 +19,7 @@ router.put('/appointment/upd/:id', auth, appointmentCtrl.update);
 router.get('/appointments', auth, appointmentCtrl.getAll);
 router.get('/appointment/byService/:serviceId', auth, appointmentCtrl.getByService);
 router.get('/appointment/byPatient/:patientId', auth, appointmentCtrl.getByPatient);
+router.get('/appointment/:id', auth, appointmentCtrl.getById);
 
 // Exportation du routeur configuré pour utilisation dans l'application principale
 module.exports = router;

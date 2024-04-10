@@ -29,6 +29,12 @@ async function getAllNews(req) {
     })
 }
 
+async function getAllPatients(req) {
+    return await User.findAll({
+        order: [['lastName', 'ASC'], ['firstName', 'ASC']]
+    })
+}
+
 async function getAllAppointments(req) {
     let appointments = await Appointment.findAll({
         include: [
@@ -36,24 +42,39 @@ async function getAllAppointments(req) {
                 model: User,
                 attributes: ['id', 'firstName', 'lastName', 'email', 'phoneNumber']
             },
+            {
+                model: Service,
+                attributes: ['id', 'name']
+            },
         ],
         order: [['date', 'DESC'], ['time', 'DESC']]
     });
 
     appointments.forEach(appointment => {
-        appointment.frenchDate = dateToStrFr(appointment.date);
-        appointment.frenchTime = appointment.time.slice(0, appointment.time.length-3);
+        appointment.frenchDate  = dateToStrFr(appointment.date);
+        appointment.frenchTime  = appointment.time.slice(0, appointment.time.length-3);
+        appointment.dateInStrUS = dateToStrUS(appointment.date);
+        appointment.title       = appointment.User.firstName + ' ' + appointment.User.lastName + ' - ' + 
+                                 appointment.Service.name + ' - ' + appointment.frenchDate + ' - ' + appointment.frenchTime;                        
     });
 
     return appointments;
 }
 
 function dateToStrFr(date){
-    let day = date.getDate().toString().padStart(2, '0');
+    let day   = date.getDate().toString().padStart(2, '0');
     let month = (date.getMonth() + 1).toString().padStart(2, '0');
-    let year = date.getFullYear();
+    let year  = date.getFullYear();
 
     return `${day}/${month}/${year}`; 
+}
+
+function dateToStrUS(date){
+    let day   = date.getDate().toString().padStart(2, '0');
+    let month = (date.getMonth() + 1).toString().padStart(2, '0');
+    let year  = date.getFullYear();
+
+    return `${year}-${month}-${day}`; 
 }
 
 function getDayOrder(dayName){
@@ -62,4 +83,4 @@ function getDayOrder(dayName){
     return days[dayName];
 }
 
-module.exports = { getAllServices, getAllSchedules, getAllNews, getAllSchedulesNotInBase, getAllAppointments, getDayOrder };
+module.exports = { getAllServices, getAllSchedules, getAllNews, getAllSchedulesNotInBase, getAllAppointments, getDayOrder, getAllPatients };
