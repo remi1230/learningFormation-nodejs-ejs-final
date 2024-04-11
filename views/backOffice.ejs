@@ -1,9 +1,9 @@
 <%- include('includes/header') %>
 
-<main>
+<main style="padding: 0 15%; ">
     <h1 class="center">Cabinet du docteur Dupont, bonjour <%= user.firstName + ' ' + user.lastName %></h1>
 
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
           <button class="nav-link active" id="service-tab" data-bs-toggle="tab" data-bs-target="#serviceTab" type="button" role="tab" aria-controls="service" aria-selected="true">Services</button>
         </li>
@@ -19,6 +19,9 @@
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="patient-tab" data-bs-toggle="tab" data-bs-target="#patientTab" type="button" role="tab" aria-controls="patient" aria-selected="false">Patients</button>
         </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="professional-tab" data-bs-toggle="tab" data-bs-target="#professionalTab" type="button" role="tab" aria-controls="professional" aria-selected="false">Collaborateurs</button>
+        </li>
       </ul>
       
       <!-- Contenu des onglets -->
@@ -28,7 +31,7 @@
         <%- include('includes/schedulesTab') %>
         <%- include('includes/appointmentTab') %>
         <%- include('includes/patientTab') %>
+        <%- include('includes/professionalTab') %>
       </div>
-<main>
-<div style="margin-bottom: 260px; "></div>
+</main>
 <%- include('includes/footer') %>

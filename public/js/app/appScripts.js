@@ -11,21 +11,24 @@ let glo = {
         newsInJSON: 'news/json',
         schedulesInJSON: 'schedules/json',
         appointmentInJSON: 'appointments',
+        professionalInJSON: 'professionals',
         news: 'news/',
         schedules: 'schedules/',
         appointment: 'appointment/',
         patient: 'patient/',
+        professional: 'professional/',
     },
     idsToUpd: {
         serviceId: 0,
     }
 };
 
-let servicesHTMLSelect    = getById('serviceId');
-let appointmentHTMLSelect = getById('appointmentId');
-let patientHTMLSelect     = getById('patientId');
-let newsHTMLSelect        = getById('newsId');
-let schedulesHTMLSelect   = getById('updSchedulesForm') ? getById('updSchedulesForm').querySelector('[name="schedulesId"]') : undefined;
+let servicesHTMLSelect     = getById('serviceId');
+let appointmentHTMLSelect  = getById('appointmentId');
+let patientHTMLSelect      = getById('patientId');
+let professionalHTMLSelect = getById('professionalId');
+let newsHTMLSelect         = getById('newsId');
+let schedulesHTMLSelect    = getById('updSchedulesForm') ? getById('updSchedulesForm').querySelector('[name="schedulesId"]') : undefined;
 
 const getSelectMaxValue   = (select = servicesHTMLSelect) => Math.max(...[...select.children].map(option => parseInt(option.value)));
 const getSelectFirstValue = (HTMLSelect)  => [...HTMLSelect.children][0].value;
@@ -54,11 +57,13 @@ if(location.pathname === '/login' && servicesHTMLSelect){
     schedulesHTMLSelect.addEventListener('change', function(e){ getSchedulesInfos(e.target.value); });
     appointmentHTMLSelect.addEventListener('change', function(e){ getAppointmentInfos(e.target.value); });
     patientHTMLSelect.addEventListener('change', function(e){ getPatientInfos(e.target.value); });
+    professionalHTMLSelect.addEventListener('change', function(e){ getProfessionalInfos(e.target.value); });
     initServicesSelect();
     initNewsSelect();
     initSchedulesSelect();
     initAppointmentSelect();
     initPatientSelect();
+    initProfessionalSelect();
 
     //Services
     addListenerOnForm('addServiceForm', 'service/add', 'POST', false, reloadServicesSelectAndInit, function(){ return 'last'; });
@@ -71,6 +76,10 @@ if(location.pathname === '/login' && servicesHTMLSelect){
     //Schedules
     addListenerOnForm('addSchedulesForm', 'schedules/addOrUpd', 'POST', false, reloadSchedulesSelectAndInit, function(){ return 'last'; });
     addListenerOnForm('updSchedulesForm', 'schedules/addOrUpd', 'POST', false, reloadSchedulesSelectAndInit, function(){ return schedulesHTMLSelect.value; });
+
+    //Professionals
+    addListenerOnForm('addProfessionalForm', 'professional/add', 'POST', false, reloadProfessionalSelectAndInit, function(){ return 'last'; });
+    addListenerOnForm('updProfessionalForm', 'professional/upd/', 'PUT', 'professionalId', reloadProfessionalSelectAndInit, function(){ return professionalHTMLSelect.value; });
 
     //Appointment
     addListenerOnForm('updAppointmentForm', 'appointment/upd/', 'PUT', 'appointmentId', appointmentUpdated, function(){ return undefined; });
@@ -163,6 +172,10 @@ function initAppointmentSelect(appointmentSelect = appointmentHTMLSelect, initVa
 function initPatientSelect(patientSelect = patientHTMLSelect, initValue = getSelectFirstValue(patientHTMLSelect)){
     patientSelect.value = initValue;
     getPatientInfos(initValue);
+}
+function initProfessionalSelect(professionalSelect = professionalHTMLSelect, initValue = getSelectFirstValue(professionalHTMLSelect)){
+    professionalSelect.value = initValue;
+    getProfessionalInfos(initValue);
 }
 
 function getServiceInfos(serviceId){
@@ -276,6 +289,29 @@ function getPatientInfos(patientId){
       });
 }
 
+function getProfessionalInfos(professionalId){
+    fetch(glo.urls.base + glo.urls.professional + professionalId, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => response.json())
+      .then(data => {
+        const updForm = getById('updProfessionalForm');
+        updForm.querySelector('[name="email"]').value       = data.user.email;
+        updForm.querySelector('[name="firstName"]').value   = data.user.firstName;
+        updForm.querySelector('[name="lastName"]').value    = data.user.lastName;
+        updForm.querySelector('[name="phoneNumber"]').value = data.user.phoneNumber;
+        updForm.querySelector('[name="serviceId"]').value   = data.user.Service.id;
+
+        glo.idsToUpd.professionalId = professionalId;
+      })
+      .catch((error) => {
+        console.error('Erreur:', error);
+      });
+}
+
 function getInFetch(url, successFunction, successFunctionParams){
   fetch(url, {
     method: 'GET',
@@ -345,6 +381,12 @@ async function reloadSchedulesSelectAndInit(schedulesId){
     if(schedulesId === 'last'){ schedulesId = getSelectMaxValue(schedulesHTMLSelect); }
     else if(!schedulesId){ getSelectFirstValue(schedulesHTMLSelect); }
     initSchedulesSelect(schedulesHTMLSelect, schedulesId);
+}
+async function reloadProfessionalSelectAndInit(professionalId){
+    await reloadSelect(professionalHTMLSelect, glo.urls.base + glo.urls.professionalInJSON, 'fullName');
+    if(professionalId === 'last'){ professionalId = getSelectMaxValue(professionalHTMLSelect); }
+    else if(!professionalId){ getSelectFirstValue(professionalHTMLSelect); }
+    initProfessionalSelect(professionalHTMLSelect, professionalId);
 }
 async function appointmentUpdated(){
     alert('RDV modifié !');

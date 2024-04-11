@@ -12,9 +12,14 @@
 const express  = require('express');
 const router   = express.Router();
 const userCtrl = require('../controllers/user');
+const auth     = require('../middleware/auth');
 
 router.post('/signup', userCtrl.signup);
 router.post('/login', userCtrl.login);
-router.get('/patient/:id', userCtrl.getPatientById);
+router.get('/patient/:id', auth, userCtrl.getPatientById);
+router.get('/professional/:id', auth, userCtrl.getProfessionalById);
+router.get('/professionals', auth, userCtrl.getProfessionals);
+router.post('/professional/add', auth, userCtrl.addProfessional);
+router.put('/professional/upd/:id', auth, userCtrl.updateProfessional);
 
 module.exports = router;

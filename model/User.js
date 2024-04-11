@@ -1,5 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
-  class User extends DataTypes.Model {}
+  class User extends DataTypes.Model {
+    // Ajouter des méthodes à la classe ici si nécessaire
+  }
 
   User.init({
     firstName: {
@@ -28,11 +30,19 @@ module.exports = (sequelize, DataTypes) => {
     },
     obsolete: {
       type: DataTypes.BOOLEAN,
-      default: false
+      defaultValue: false
+    },
+    // Ajouter fullName comme un attribut virtuel
+    fullName: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return `${this.firstName} ${this.lastName}`;
+      }
     }
   }, {
     sequelize,
-    modelName: 'User'
+    modelName: 'User',
+    // Les options comme les hooks ou les méthodes d'instance peuvent être ajoutées ici
   });
 
   return User;

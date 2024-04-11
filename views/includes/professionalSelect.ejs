@@ -1,0 +1,6 @@
+<label for="professionalId" class="form-label">Collaborateur</label>
+<select id="professionalId" class="form-select" name="professionalId" aria-label="Default select example">
+    <% professionals.forEach(function(professional) { %>
+        <option value="<%= professional.id %>"><%= professional.fullName %></option>
+    <% }); %>
+</select>

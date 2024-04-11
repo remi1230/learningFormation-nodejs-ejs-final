@@ -1,0 +1,28 @@
+<div class="mb-3">
+    <label for="serviceIdPro" class="form-label">Service</label>
+    <select id="serviceIdPro" class="form-select" name="serviceId" aria-label="Default select example">
+        <% servicesPro.forEach(function(service) { %>
+            <option value="<%= service.id %>"><%= service.name %></option>
+        <% }); %>
+    </select>
+</div>
+<div class="mb-3">
+    <label for="emailPro" class="form-label">Email</label>
+    <input type="email" name="email" class="form-control" id="emailPro" aria-describedby="emailHelp">
+</div>
+<div class="mb-3">
+    <label for="passwordPro" class="form-label">Mot de passe</label>
+    <input type="password" name="password" class="form-control" id="passwordPro">
+</div>
+<div class="mb-3">
+    <label for="firstNamePro" class="form-label">Prénom</label>
+    <input type="text" class="form-control" id="firstNamePro" name="firstName">
+</div>
+<div class="mb-3">
+    <label for="lastNamePro" class="form-label">Nom</label>
+    <input type="text" class="form-control" id="lastNamePro" name="lastName">
+</div>
+<div class="mb-3">
+    <label for="phoneNumberPro" class="form-label">Téléphone</label>
+    <input type="text" class="form-control" id="phoneNumberPro" name="phoneNumber">
+</div>

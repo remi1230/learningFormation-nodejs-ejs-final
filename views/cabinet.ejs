@@ -32,23 +32,28 @@
             </p>
         </div>
     </div>
-
-    <div id="servicesContainer" class="d-flex justify-content-center">
-        <% services.forEach(function(service) { %>
-            <div class="me-2">
-                <div class="card" style="width: 36rem;">
-                    <div class="card-body">
-                        <h5 class="card-title center">
-                            <%= service.name %> - 
-                            <%= (service.Users && service.Users.length > 0) ? service.Users[0].firstName : 'Pas d\'utilisateur' %>
-                        </h5>                        
-                    <p class="card-text"><%= service.detail %></p>
-                    </div>
-                </div>
-            </div>
-        <% }); %>
+    <div id="servicesContainer">
+        <h2 class="center" style="margin-top: 12px; ">Liste des services</h2>
+        <div class="d-flex justify-content-center">
+            <ol class="list-group list-group-numbered" style="--bs-list-group-item-padding-x: 1;">
+                <% services.forEach(function(service) { %>
+                    <li class="list-group-item d-flex justify-content-between align-items-start" style="padding: 5px; ">
+                        <div class="ms-2 me-auto">
+                        <div class="fw-bold"><%= service.name %></div>
+                        <%= service.description %>
+                        </div>
+                        <span>
+                            <% if (service.Users && service.Users.length > 0) { 
+                                service.Users.forEach(function(user) { %>
+                                    <span class="badge text-bg-primary rounded-pill"><%= user.fullName %></span>
+                            <% }); 
+                            } %>
+                        </span>
+                    </li>
+                <% }); %>
+            </ol>
+        </div>
     </div>
-
-<main>
+</main>
     
 <%- include('includes/footer') %>

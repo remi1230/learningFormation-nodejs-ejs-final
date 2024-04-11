@@ -55,6 +55,14 @@ async function getAllNews(req, withObsoletes = true) {
 
 async function getAllPatients(req) {
     return await User.findAll({
+        where: {role: 'Patient'},
+        order: [['lastName', 'ASC'], ['firstName', 'ASC']]
+    })
+}
+
+async function getAllProfessionals(req) {
+    return await User.findAll({
+        where: {role: 'Professional'},
         order: [['lastName', 'ASC'], ['firstName', 'ASC']]
     })
 }
@@ -114,4 +122,4 @@ function getDayOrder(dayName){
     return days[dayName];
 }
 
-module.exports = { getAllServices, getAllSchedules, getAllNews, getAllSchedulesNotInBase, getAllAppointments, getDayOrder, getAllPatients };
+module.exports = { getAllServices, getAllSchedules, getAllNews, getAllSchedulesNotInBase, getAllAppointments, getDayOrder, getAllPatients, getAllProfessionals };

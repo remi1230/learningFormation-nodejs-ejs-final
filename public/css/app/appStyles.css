@@ -41,6 +41,9 @@ footer{
     color: #999;
 }
 
+#footer-content{
+    line-height: 8px;
+}
 #carouselClinic{
     width: 421px;
 }
@@ -56,11 +59,26 @@ footer{
 #takeAppointmentForm{
     width: 666px;
 }
-#servicesContainer{
-    height: 300px;
-}
 #backOfficeTabContent{
     padding: 15px;
+}
+#serviceTab{
+    margin-bottom: 163px;
+}
+#newsTab{
+    margin-bottom: 249px;
+}
+#schedulesTab{
+    margin-bottom: 341px;
+}
+#appointmentTab{
+    margin-bottom: 55px;
+}
+#patientTab{
+    margin-bottom: 207px;
+}
+#professionalTab{
+    margin-bottom: 3px;
 }
 
 /* ****************** MENU****************** */

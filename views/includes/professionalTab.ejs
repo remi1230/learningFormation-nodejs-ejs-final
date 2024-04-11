@@ -1,0 +1,23 @@
+<div class="tab-pane fade" id="professionalTab" role="tabpanel" aria-labelledby="professional-tab">
+    <div class="row">
+        <form id="addProfessionalForm" class="col">
+            <%- include('professionalFormBase') %>
+            <button type="submit" class="btn btn-primary" style="margin-top: 20px; ">CRÉER</button>
+        </form>
+        <form id="updProfessionalForm" class="col">
+            <div style="margin-bottom: 16px; ">
+                <%- include('professionalSelect') %>
+            </div>
+            <%- include('professionalFormBase') %>
+            <div class="form-check" style="margin-top: 10px; ">
+                <input class="form-check-input" type="checkbox" value="" id="obsolete" name="obsolete">
+                <label class="form-check-label" for="obsolete">
+                  Obsolète
+                </label>
+            </div>
+            <div class="row" style="margin-top: 20px; ">
+                <button type="submit" class="btn btn-primary col-3" >MODIFIER</button>
+            </div>
+        </form>
+    </div>
+</div>
