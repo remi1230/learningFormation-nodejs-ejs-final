@@ -40,6 +40,9 @@ footer{
     font-size: 14px;
     color: #999;
 }
+.newsImg{
+    width: 20%;
+}
 
 #footer-content{
     line-height: 8px;
@@ -79,6 +82,11 @@ footer{
 }
 #professionalTab{
     margin-bottom: 3px;
+}
+#imagePreview{
+    width: 20%;
+    margin-bottom: 10px;
+    float: right;
 }
 
 /* ****************** MENU****************** */

@@ -23,7 +23,8 @@ exports.add = (req, res, next) => {
         title         : title,
         content       : content,
         obsolete      : false,
-        publishedDate : publishedDate
+        publishedDate : publishedDate,
+        imageUrl      : req.file.filename ? `${req.protocol}://${req.get('host')}/public/img/news/${req.file.filename}` : null
     })
     .then(() => { res.status(201).json({message: 'News enregistré !'})})
     .catch(error => { res.status(400).json( { error })})
@@ -38,40 +39,44 @@ exports.add = (req, res, next) => {
  * @param {Function} next - La fonction middleware à exécuter ensuite.
  */
 exports.update = (req, res, next) => {
-    if(req.auth.userRole !== 'Professional'){ return res.status(400).json({ error: "Seuls les professionnels peuvent modifier les news!" })};
+    if (req.auth.userRole !== 'Professional') {
+        return res.status(400).json({ error: "Seuls les professionnels peuvent modifier les news!" });
+    }
 
-    const id          = req.params.id;
-    const title       = req.body.title;
-    const content     = req.body.content;
-    const obsolete    = req.body.obsolete;
+    const id = req.params.id;
     const newAuthorId = req.auth.userId;
 
     News.findByPk(id)
-    .then(news => {
-        if (!news) {
-            return res.status(404).json({error: 'News non trouvé !'});
-        }
+        .then(news => {
+            if (!news) {
+                return res.status(404).json({ error: 'News non trouvé !' });
+            }
 
-        if(newAuthorId !== news.userId){
-            return res.status(401).json({ message: "Vous devez être l'auteur de la news pour la modifier" });
-        }
+            if (newAuthorId !== news.userId) {
+                return res.status(401).json({ message: "Vous devez être l'auteur de la news pour la modifier" });
+            }
 
-        const updateValues = {
-            title    : title   !== undefined ? title   : news.title,
-            content  : content !== undefined ? content : news.content,
-        };
+            // Mise à jour de l'objet avec les données reçues
+            let newsData = {
+                title    : req.body.title,
+                content  : req.body.content
+            };
 
-        // Vérifie explicitement si 'obsolete' est présent dans le corps de la requête
-        if (req.body.hasOwnProperty('obsolete')) {
-            console.log({ obsolete });
-            updateValues.obsolete = obsolete;
-        }
-        
-        news.update(updateValues)
-        .then(() => res.status(200).json({message: 'News mis à jour !'}))
-        .catch(error => res.status(400).json({error}));
-    })
-    .catch(error => res.status(400).json({error}));
+            //if (req.body.hasOwnProperty('obsolete')) { newsData.obsolete = req.body.obsolete; }
+            if (req.body.obsolete !== undefined) {
+                newsData.obsolete = req.body.obsolete;
+            }            
+
+            // Si un fichier est présent, on ajoute l'URL de l'image
+            if (req.file) {
+                newsData.imageUrl = `${req.protocol}://${req.get('host')}/public/img/news/${req.file.filename}`;
+            }
+
+            news.update(newsData)
+                .then(() => res.status(200).json({ message: 'News mis à jour !' }))
+                .catch(error => res.status(400).json({ error }));
+        })
+        .catch(error => res.status(400).json({ error }));
 };
 
  /**

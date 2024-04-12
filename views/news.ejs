@@ -15,9 +15,9 @@
                                 <span>- <%= theNews.date %></span>
                                 <span><%= theNews.time %></span> 
                             </span>
-                            
                         </h5>
-                        <p class="card-text"><%= theNews.content %></p>
+                        <div class="center"><img src="<%= theNews.imageUrl %>" class="card-img-top newsImg" alt="Une image"></div>
+                        <p class="card-text"><%- theNews.content %></p>
                         </div>
                     </div>
                 </div>

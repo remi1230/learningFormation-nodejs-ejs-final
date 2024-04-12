@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATEONLY,
       allowNull: false
     },
+    imageUrl: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     obsolete: {
       type: DataTypes.BOOLEAN,
       default: false

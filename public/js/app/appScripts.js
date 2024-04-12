@@ -65,13 +65,22 @@ if(location.pathname === '/login' && servicesHTMLSelect){
     initPatientSelect();
     initProfessionalSelect();
 
+    const addNewsForm = getById('addNewsForm');
+    const updNewsForm = getById('updNewsForm');
+
+    addNewsForm.querySelector('[name="content"]').id = "contentToAdd";
+    updNewsForm.querySelector('[name="content"]').id = "contentToUpd";
+
+    designImagePreview();
+    tinymce.init({ selector: 'textarea#contentToAdd, textarea#contentToUpd' });
+
     //Services
     addListenerOnForm('addServiceForm', 'service/add', 'POST', false, reloadServicesSelectAndInit, function(){ return 'last'; });
     addListenerOnForm('updServiceForm', 'service/upd/', 'PUT', 'serviceId', reloadServicesSelectAndInit, function(){ return servicesHTMLSelect.value; }, ['obsolete']);
 
     //News
-    addListenerOnForm('addNewsForm', 'news/add', 'POST', false, reloadNewsSelectAndInit, function(){ return 'last'; });
-    addListenerOnForm('updNewsForm', 'news/upd/', 'PUT', 'newsId', reloadNewsSelectAndInit, function(){ return newsHTMLSelect.value; }, ['obsolete']);
+    addListenerOnForm('addNewsForm', 'news/add', 'POST', false, reloadNewsSelectAndInit, function(){ return 'last'; }, [], true);
+    addListenerOnForm('updNewsForm', 'news/upd/', 'PUT', 'newsId', reloadNewsSelectAndInit, function(){ return newsHTMLSelect.value; }, ['obsolete'], true);
 
     //Schedules
     addListenerOnForm('addSchedulesForm', 'schedules/addOrUpd', 'POST', false, reloadSchedulesSelectAndInit, function(){ return 'last'; });
@@ -114,7 +123,7 @@ else if(location.pathname === '/service'){
 }
 
 //FUNCTIONS
-function addListenerOnForm(formId, enPoint, method = 'POST', idVarName = false, successFunction = false, successFunctionParams = undefined, checkboxesNames = []){
+function addListenerOnForm(formId, enPoint, method = 'POST', idVarName = false, successFunction = false, successFunctionParams = undefined, checkboxesNames = [], withFile = false){
     let form = getById(formId);
   
     if(form){
@@ -130,18 +139,26 @@ function addListenerOnForm(formId, enPoint, method = 'POST', idVarName = false, 
           checkboxesNames.forEach(checkboxName => {
             object[checkboxName] = form.querySelector(`[name="${ checkboxName }"]`).checked;
           });
-          var jsonData = JSON.stringify(object);
+          var jsonData = !withFile ? JSON.stringify(object) : undefined;
   
           let param = !idVarName ? '' : glo.idsToUpd[idVarName];
+
+          let fetchOptions = {};
+          if(!withFile){
+            fetchOptions = {
+              method: method,
+              headers: {'Content-Type' : 'application/json', },
+              body: (formId !== 'getVegicleDetailForm' ? jsonData : undefined)
+            };
+          }
+          else{
+            fetchOptions = {
+              method: method,
+              body: (formId !== 'getVegicleDetailForm' ? formData : undefined),
+            }
+          }
   
-          fetch('http://localhost:3000/' + enPoint + param, {
-            method: method,
-            headers: {
-              'Content-Type' : 'application/json',
-              'Authorization': `Bearer ${token}`
-            },
-            body: (formId !== 'getVegicleDetailForm' ? jsonData : undefined),
-          })
+          fetch('http://localhost:3000/' + enPoint + param, fetchOptions)
           .then(response => response.json())
           .then(data => {
             console.log('Succès:', data);
@@ -209,10 +226,14 @@ function getNewsInfos(newsId){
       })
       .then(response => response.json())
       .then(data => {
+        let editor = tinymce.get('contentToUpd');
+        editor.setContent(data.content);
+
         const updForm = getById('updNewsForm');
-        updForm.querySelector('[name="title"]').value      = data.title;
-        updForm.querySelector('[name="content"]').value    = data.content;
-        updForm.querySelector('[name="obsolete"]').checked = data.obsolete;
+        updForm.querySelector('[name="title"]').value       = data.title;
+        updForm.querySelector('[name="content"]').value     = data.content;
+        updForm.querySelector('[id="imagePreview"]').src    = data.imageUrl ? data.imageUrl : '';
+        updForm.querySelector('[name="obsolete"]').checked  = data.obsolete;
 
         glo.idsToUpd.newsId = newsId;
       })
@@ -396,6 +417,18 @@ function removeAllChildren(parent){
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
     }
+}
+
+function designImagePreview(){
+  const imgPrev = getById('updNewsForm').querySelector('[id="imagePreview"]').parentElement;
+
+  const optionsDesign = {
+    border       : "1px #ccc solid",
+    borderRadius : "5px",
+    padding      : "5px"
+  };
+
+  for(let prop in optionsDesign){ imgPrev.style[prop] = optionsDesign[prop]; }
 }
 
 function getCookie(name) {
