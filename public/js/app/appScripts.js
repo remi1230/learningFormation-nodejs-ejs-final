@@ -3,7 +3,7 @@ const getById = id => document.getElementById(id);
 //Variables globales
 let glo = {
     urls: {
-        base: 'http://localhost:3000/',
+        base: 'http://ctrobien.com/learningFormation2/',
         takeAppointment: 'takeAppointment',
         connexion: 'connexion',
         service: 'service/',
@@ -31,7 +31,7 @@ let newsHTMLSelect         = getById('newsId');
 let schedulesHTMLSelect    = getById('updSchedulesForm') ? getById('updSchedulesForm').querySelector('[name="schedulesId"]') : undefined;
 
 const getSelectMaxValue   = (select = servicesHTMLSelect) => Math.max(...[...select.children].map(option => parseInt(option.value)));
-const getSelectFirstValue = (HTMLSelect)  => [...HTMLSelect.children][0].value;
+const getSelectFirstValue = (HTMLSelect)  => [...HTMLSelect.children][0] ? [...HTMLSelect.children][0].value : false;
 const deleteService       = (serviceId)   => { getInFetch(glo.urls.base + glo.urls.service + 'delete/' + serviceId, reloadServicesSelectAndInit); }
 const deleteNews          = (newsId)      => { getInFetch(glo.urls.base + glo.urls.news + 'delete/' + newsId, reloadNewsSelectAndInit); }
 const deleteSchedules     = (schedulesId) => { getInFetch(glo.urls.base + glo.urls.schedules + 'delete/' + schedulesId, reloadSchedulesSelectAndInit); }
@@ -51,7 +51,7 @@ if(getById('takeAppointment')){
     });
 }
 
-if(location.pathname === '/login' && servicesHTMLSelect){
+if(location.pathname === '/learningFormation2/login' && servicesHTMLSelect){
     servicesHTMLSelect.addEventListener('change', function(e){ getServiceInfos(e.target.value); });
     newsHTMLSelect.addEventListener('change', function(e){ getNewsInfos(e.target.value); });
     schedulesHTMLSelect.addEventListener('change', function(e){ getSchedulesInfos(e.target.value); });
@@ -98,7 +98,7 @@ if(location.pathname === '/login' && servicesHTMLSelect){
     getById('deleteNewsButton').addEventListener('click', function(e){ deleteNews(newsHTMLSelect.value); });
     getById('deleteSchedulesButton').addEventListener('click', function(e){ deleteSchedules(schedulesHTMLSelect.value); });
 }
-else if(location.pathname === '/service'){
+else if(location.pathname === '/learningFormation2/service'){
     const serviceHTMLItem = {
         select    : getById('serviceId'),
         cardTitle : getById('serviceDescription'),
@@ -158,7 +158,7 @@ function addListenerOnForm(formId, enPoint, method = 'POST', idVarName = false, 
             }
           }
   
-          fetch('http://localhost:3000/' + enPoint + param, fetchOptions)
+          fetch('http://ctrobien.com/learningFormation2/' + enPoint + param, fetchOptions)
           .then(response => response.json())
           .then(data => {
             console.log('Succès:', data);
@@ -171,28 +171,40 @@ function addListenerOnForm(formId, enPoint, method = 'POST', idVarName = false, 
 }
 
 function initServicesSelect(servicesSelect = servicesHTMLSelect, initValue = getSelectFirstValue(servicesSelect)){
-    servicesSelect.value = initValue;
-    getServiceInfos(initValue);
+    if(initValue){
+      servicesSelect.value = initValue;
+      getServiceInfos(initValue);
+    }
 }
 function initNewsSelect(newsSelect = newsHTMLSelect, initValue = getSelectFirstValue(newsHTMLSelect)){
+  if(initValue){
     newsSelect.value = initValue;
     getNewsInfos(initValue);
+  }
 }
 function initSchedulesSelect(schedulesSelect = schedulesHTMLSelect, initValue = getSelectFirstValue(schedulesHTMLSelect)){
+  if(initValue){
     schedulesSelect.value = initValue;
     getSchedulesInfos(initValue);
+  }
 }
 function initAppointmentSelect(appointmentSelect = appointmentHTMLSelect, initValue = getSelectFirstValue(appointmentHTMLSelect)){
+  if(initValue){
     appointmentSelect.value = initValue;
     getAppointmentInfos(initValue);
+  }
 }
 function initPatientSelect(patientSelect = patientHTMLSelect, initValue = getSelectFirstValue(patientHTMLSelect)){
+  if(initValue){
     patientSelect.value = initValue;
     getPatientInfos(initValue);
+  }
 }
 function initProfessionalSelect(professionalSelect = professionalHTMLSelect, initValue = getSelectFirstValue(professionalHTMLSelect)){
+  if(initValue){
     professionalSelect.value = initValue;
     getProfessionalInfos(initValue);
+  }
 }
 
 function getServiceInfos(serviceId){
@@ -324,7 +336,7 @@ function getProfessionalInfos(professionalId){
         updForm.querySelector('[name="firstName"]').value   = data.user.firstName;
         updForm.querySelector('[name="lastName"]').value    = data.user.lastName;
         updForm.querySelector('[name="phoneNumber"]').value = data.user.phoneNumber;
-        updForm.querySelector('[name="serviceId"]').value   = data.user.Service.id;
+        updForm.querySelector('[name="serviceId"]').value   = data.user.Service ? data.user.Service.id : '';
 
         glo.idsToUpd.professionalId = professionalId;
       })

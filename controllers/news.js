@@ -14,6 +14,8 @@ const User = db.User;
 exports.add = (req, res, next) => {
     if(req.auth.userRole !== 'Professional'){ return res.status(400).json( { error: "You must be a professional to add a news!" })};
 
+    const hostUrl = process.env.HOST_URL;
+
     const title         = req.body.title;
     const content       = req.body.content;
     const authorId      = req.auth.userId;
@@ -24,11 +26,11 @@ exports.add = (req, res, next) => {
         content       : content,
         obsolete      : false,
         publishedDate : publishedDate,
-        imageUrl      : req.file.filename ? `${req.protocol}://${req.get('host')}/public/img/news/${req.file.filename}` : null
+        imageUrl      : req.file.filename ? `${req.protocol}://${hostUrl}/public/img/news/${req.file.filename}` : null
     })
     .then(() => { res.status(201).json({message: 'News enregistré !'})})
     .catch(error => { res.status(400).json( { error })})
- };
+ };http://ctrobien.com/learningFormation2/public/img/news/implant.webp1713016492274.undefined
 
  /**
  * Met à jour un news existant avec le nom et la description fournis dans le corps de la requête.
@@ -42,6 +44,8 @@ exports.update = (req, res, next) => {
     if (req.auth.userRole !== 'Professional') {
         return res.status(400).json({ error: "Seuls les professionnels peuvent modifier les news!" });
     }
+
+    const hostUrl = process.env.HOST_URL;
 
     const id = req.params.id;
     const newAuthorId = req.auth.userId;
@@ -69,7 +73,7 @@ exports.update = (req, res, next) => {
 
             // Si un fichier est présent, on ajoute l'URL de l'image
             if (req.file) {
-                newsData.imageUrl = `${req.protocol}://${req.get('host')}/public/img/news/${req.file.filename}`;
+                newsData.imageUrl = `${req.protocol}://${hostUrl}/public/img/news/${req.file.filename}`;
             }
 
             news.update(newsData)

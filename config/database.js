@@ -9,8 +9,8 @@ delete require.cache[require.resolve('sequelize')];
 const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize(bddName, bddUser, bddMdp, {
-  host: 'localhost',
-  dialect: 'mysql' // ou 'postgres', 'sqlite', 'mariadb', etc.
+  host: 'sql11.freesqldatabase.com',
+  dialect: 'mysql'
 });
 
 module.exports = sequelize;

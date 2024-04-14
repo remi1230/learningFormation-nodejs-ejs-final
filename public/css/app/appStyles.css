@@ -50,12 +50,12 @@ footer{
 #carouselClinic{
     width: 421px;
 }
-#connectButtonContainer{
+#takeAppointmentButtonContainer{
     text-align: left;
     margin-left: 15px;
 }
 
-#takeAppointmentButtonContainer{
+#connectButtonContainer{
     text-align: right;
     margin-left: -30px;
 }
