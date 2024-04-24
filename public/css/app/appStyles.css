@@ -97,14 +97,24 @@ footer{
     margin-bottom: 10px;
     float: right;
 }
+#accueilMain{
+    min-height: 759px;
+    margin-top: -15px;
+}
 
 /* ****************** MENU****************** */
+header{
+    top: 0;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
 #navigation-menu {
     list-style-type: none;
     margin: 0;
-    padding: 0;
     overflow: hidden;
     background-color: #333;
+    padding: 0 0 2px 0;
 }
 #navigation-menu li {
     float: left;
@@ -119,6 +129,6 @@ footer{
 #navigation-menu li a:hover {
     background-color: #111;
 }
-#appHeader{
-    margin-top: -15px;
+#headerSpace{
+    height: 50px;
 }
