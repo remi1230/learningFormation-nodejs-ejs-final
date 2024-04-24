@@ -30,7 +30,7 @@ exports.add = (req, res, next) => {
     })
     .then(() => { res.status(201).json({message: 'News enregistré !'})})
     .catch(error => { res.status(400).json( { error })})
- };http://ctrobien.com/learningFormation2/public/img/news/implant.webp1713016492274.undefined
+ };
 
  /**
  * Met à jour un news existant avec le nom et la description fournis dans le corps de la requête.
@@ -68,7 +68,7 @@ exports.update = (req, res, next) => {
 
             //if (req.body.hasOwnProperty('obsolete')) { newsData.obsolete = req.body.obsolete; }
             if (req.body.obsolete !== undefined) {
-                newsData.obsolete = req.body.obsolete;
+                newsData.obsolete = req.body.obsolete === 'true' ? true : false;
             }            
 
             // Si un fichier est présent, on ajoute l'URL de l'image

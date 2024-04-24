@@ -27,6 +27,9 @@ footer{
 .mBot20{
     margin-bottom: 20px;
 }
+.pBot0{
+    padding-bottom: 0;
+}
 .ml23{
     margin-left: 23px;
 }
@@ -39,9 +42,15 @@ footer{
 .newsItem{
     font-size: 14px;
     color: #999;
+    display: flex;
+    justify-content: end;
+    margin-bottom: 20px;
 }
-.newsImg{
-    width: 20%;
+.newsTitle{
+    margin-bottom: 8px;
+}
+.newsImg {
+    width: 269px;
 }
 
 #footer-content{
@@ -113,4 +122,3 @@ footer{
 #appHeader{
     margin-top: -15px;
 }
-

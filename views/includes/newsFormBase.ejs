@@ -1,15 +1,33 @@
 <div>
     <div class="mb-3">
         <label for="title" class="form-label">Titre</label>
-        <input type="text" name="title" class="form-control" id="title">
+        <input type="text" name="title" class="form-control" id="title" required>
+        <div class="valid-feedback">
+            Correct !
+        </div>
+        <div class="invalid-feedback">
+            Veuillez titrer l'article !
+        </div>
     </div>
     <div class="mb-3">
         <label for="content" class="form-label">Contenu</label>
-        <textarea data-toupd="false" class="form-control" placeholder="Décrire la nouvelle" id="content" name="content" style="height: 90px"></textarea>
+        <textarea data-toupd="false" class="form-control" placeholder="Décrire la nouvelle" id="content" name="content" style="height: 90px" required></textarea>
+        <div class="valid-feedback">
+            Correct !
+        </div>
+        <div class="invalid-feedback">
+            Veuillez décire la nouvelle !
+        </div>
     </div>
     <div class="mb-3">
         <label for="title" class="form-label">Image</label>
         <img id="imagePreview" src="" alt="">
-        <input type="file" name="image" class="form-control" id="title">
+        <input type="file" name="image" class="form-control" id="newsImage" required>
+        <div class="valid-feedback">
+            Correct !
+        </div>
+        <div class="invalid-feedback">
+            Veuillez choisir une image !
+        </div>
     </div>
 </div>

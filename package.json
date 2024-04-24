@@ -4,7 +4,7 @@
   "description": "Deuxième projet de formation Node avec EJS",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -26,7 +26,11 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.9.3",
+    "nodemailer": "^6.9.13",
     "path": "^0.12.7",
     "sequelize": "^6.37.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }

@@ -33,13 +33,15 @@ module.exports = (req, res, next) => {
         // Vérification du token à l'aide de la clé secrète
         const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
         // Extraction de l'ID de l'utilisateur et de son rôle du token décodé
-        const userId   = decodedToken.userId;
-        const userRole = decodedToken.userRole;
+        const userId       = decodedToken.userId;
+        const userRole     = decodedToken.userRole;
+        const userFullName = decodedToken.userFullName;
 
         // Ajout des informations d'authentification à l'objet de la requête
         req.auth = {
-            userId: userId,
-            userRole: userRole
+            userId       : userId,
+            userRole     : userRole,
+            userFullName : userFullName
         };
         next(); // Passage au middleware suivant
     } catch(error) {

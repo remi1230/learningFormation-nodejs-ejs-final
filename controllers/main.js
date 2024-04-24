@@ -11,8 +11,10 @@ const { getAll: getAllSchedules } = require('./schedules');
 //Routes
 exports.indexPage = async (req, res, next) => {
     try {
-        const services  = await getAllServices(req, false);
-        const schedules = await getAllSchedules(req);
+        const services = await getAllServices(req, false);
+        let schedules  = await getAllSchedules(req);
+
+        schedules.sort((a,b) => a.order - b.order);
 
         res.render('index', {
             title: 'Test page',

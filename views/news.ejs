@@ -7,14 +7,14 @@
             <% news.forEach(function(theNews) { %>
                 <div class="d-flex justify-content-center">
                     <div class="card" style="width: 54rem; margin-top: 25px; ">
-                        <div class="card-body">
+                        <div class="card-body pBot0">
                         <h5 class="card-title center">
-                            <span style="margin-left: 137px; "><%= theNews.title %></span>
-                            <span class="newsItem" style="float: right; ">
+                            <div class="newsItem">
                                 <span><%= theNews.author %></span>
                                 <span>- <%= theNews.date %></span>
                                 <span><%= theNews.time %></span> 
-                            </span>
+                            </div>
+                            <div class="newsTitle"><%= theNews.title %></div>
                         </h5>
                         <div class="center"><img src="<%= theNews.imageUrl %>" class="card-img-top newsImg" alt="Une image"></div>
                         <p class="card-text"><%- theNews.content %></p>

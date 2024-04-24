@@ -122,4 +122,8 @@ function getDayOrder(dayName){
     return days[dayName];
 }
 
-module.exports = { getAllServices, getAllSchedules, getAllNews, getAllSchedulesNotInBase, getAllAppointments, getDayOrder, getAllPatients, getAllProfessionals };
+module.exports = {
+    getAllServices, getAllSchedules, getAllNews, getAllSchedulesNotInBase,
+    getAllAppointments, getDayOrder, getAllPatients, getAllProfessionals,
+    dateToStrFr, dateToStrUS
+};

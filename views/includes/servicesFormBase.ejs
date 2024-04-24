@@ -1,14 +1,32 @@
 <div>
     <div class="mb-3">
         <label for="name" class="form-label">Libelle</label>
-        <input type="text" name="name" class="form-control" id="name">
+        <input type="text" name="name" class="form-control" id="name" required>
+        <div class="valid-feedback">
+            Correct !
+        </div>
+        <div class="invalid-feedback">
+            Le libellé est obligatoire !
+        </div>    
     </div>
     <div class="mb-3">
         <label for="description" class="form-label">Description</label>
-        <input type="text" class="form-control" id="description" name="description">
+        <input type="text" class="form-control" id="description" name="description" required>
+        <div class="valid-feedback">
+            Correct !
+        </div>
+        <div class="invalid-feedback">
+            La description est obligatoire !
+        </div>
     </div>
     <div class="mb-3">
         <label for="detail" class="form-label">Détail</label>
-        <textarea class="form-control" placeholder="Détaillez le service" id="detail" name="detail" style="height: 90px"></textarea>
+        <textarea class="form-control" placeholder="Détaillez le service" id="detail" name="detail" style="height: 90px" required></textarea>
+        <div class="valid-feedback">
+            Correct !
+        </div>
+        <div class="invalid-feedback">
+            Veuillez détailler ce service !
+        </div>
     </div>
 </div>

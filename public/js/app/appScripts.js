@@ -23,18 +23,21 @@ let glo = {
     }
 };
 
+const daysOfWeek = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+
 let servicesHTMLSelect     = getById('serviceId');
 let appointmentHTMLSelect  = getById('appointmentId');
 let patientHTMLSelect      = getById('patientId');
 let professionalHTMLSelect = getById('professionalId');
 let newsHTMLSelect         = getById('newsId');
 let schedulesHTMLSelect    = getById('updSchedulesForm') ? getById('updSchedulesForm').querySelector('[name="schedulesId"]') : undefined;
+let schedulesHTMLSelectAdd = getById('addSchedulesForm') ? getById('addSchedulesForm').querySelector('[name="dayOfWeek"]') : undefined;
 
 const getSelectMaxValue   = (select = servicesHTMLSelect) => Math.max(...[...select.children].map(option => parseInt(option.value)));
 const getSelectFirstValue = (HTMLSelect)  => [...HTMLSelect.children][0] ? [...HTMLSelect.children][0].value : false;
 const deleteService       = (serviceId)   => { getInFetch(glo.urls.base + glo.urls.service + 'delete/' + serviceId, reloadServicesSelectAndInit); }
 const deleteNews          = (newsId)      => { getInFetch(glo.urls.base + glo.urls.news + 'delete/' + newsId, reloadNewsSelectAndInit); }
-const deleteSchedules     = (schedulesId) => { getInFetch(glo.urls.base + glo.urls.schedules + 'delete/' + schedulesId, reloadSchedulesSelectAndInit); }
+const deleteSchedules     = async (schedulesId) => { await getInFetch(glo.urls.base + glo.urls.schedules + 'delete/' + schedulesId, function(){}); await reloadSchedulesSelectAndInit(); updSchedulesHTMLSelectAdd(true); }
 
 //ÉVÈNEMENTS
 document.addEventListener('DOMContentLoaded', function() {
@@ -70,6 +73,9 @@ if(location.pathname === '/learningFormation2/login' && servicesHTMLSelect){
 
     addNewsForm.querySelector('[name="content"]').id = "contentToAdd";
     updNewsForm.querySelector('[name="content"]').id = "contentToUpd";
+    updNewsForm.querySelector('[name="image"]').id   = "newsImageToUpd";
+    
+    getById('newsImageToUpd').required = false;
 
     designImagePreview();
     tinymce.init({ selector: 'textarea#contentToAdd, textarea#contentToUpd' });
@@ -129,7 +135,15 @@ function addListenerOnForm(formId, enPoint, method = 'POST', idVarName = false, 
     if(form){
         getById(formId).addEventListener('submit', function(e) {
         e.preventDefault();
-        
+
+        if (form.classList.contains('needs-validation') && !form.checkValidity()) {
+          e.preventDefault();
+          e.stopPropagation();
+          form.classList.add('was-validated');
+
+          return false;
+        }
+  
         const token = getCookie('token');
         if((formId === 'signupForm' || formId === 'loginForm') || token){
           var formData = new FormData(this);
@@ -138,6 +152,7 @@ function addListenerOnForm(formId, enPoint, method = 'POST', idVarName = false, 
           formData.forEach((value, key) => { object[key] = value });
           checkboxesNames.forEach(checkboxName => {
             object[checkboxName] = form.querySelector(`[name="${ checkboxName }"]`).checked;
+            if(withFile){ formData.set(checkboxName, form.querySelector(`[name="${ checkboxName }"]`).checked) }
           });
           var jsonData = !withFile ? JSON.stringify(object) : undefined;
   
@@ -162,7 +177,10 @@ function addListenerOnForm(formId, enPoint, method = 'POST', idVarName = false, 
           .then(response => response.json())
           .then(data => {
             console.log('Succès:', data);
-            if(successFunction){ successFunction(successFunctionParams()); }
+            if(successFunction){
+              successFunction(successFunctionParams());
+              if(formId.includes('upd')){ alert('Modifications effectuées'); }
+            }
           })
           .catch((error) => console.error('Erreur:', error));
         }
@@ -182,10 +200,10 @@ function initNewsSelect(newsSelect = newsHTMLSelect, initValue = getSelectFirstV
     getNewsInfos(initValue);
   }
 }
-function initSchedulesSelect(schedulesSelect = schedulesHTMLSelect, initValue = getSelectFirstValue(schedulesHTMLSelect)){
+async function initSchedulesSelect(schedulesSelect = schedulesHTMLSelect, initValue = getSelectFirstValue(schedulesHTMLSelect)){
   if(initValue){
     schedulesSelect.value = initValue;
-    getSchedulesInfos(initValue);
+    await getSchedulesInfos(initValue);
   }
 }
 function initAppointmentSelect(appointmentSelect = appointmentHTMLSelect, initValue = getSelectFirstValue(appointmentHTMLSelect)){
@@ -222,6 +240,11 @@ function getServiceInfos(serviceId){
         updForm.querySelector('[name="detail"]').value      = data.service.detail;
         updForm.querySelector('[name="obsolete"]').checked  = data.service.obsolete;
 
+        let deleteButton = updForm.querySelector('[id="deleteServiceButton"]');
+
+        deleteButton.disabled = data.isUsed;
+        deleteButton.title    = data.isUsed ? "Le service ne peut être supprimé car il est actuellement utilisé, vous pouvez le rendre obsolète" : "Supprimer ce service";
+
         glo.idsToUpd.serviceId = serviceId;
       })
       .catch((error) => {
@@ -254,8 +277,8 @@ function getNewsInfos(newsId){
       });
 }
 
-function getSchedulesInfos(schedulesId){
-    fetch(glo.urls.base + glo.urls.schedules + schedulesId, {
+async function getSchedulesInfos(schedulesId){
+    await fetch(glo.urls.base + glo.urls.schedules + schedulesId, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -264,8 +287,8 @@ function getSchedulesInfos(schedulesId){
       .then(response => response.json())
       .then(data => {
         const updForm = getById('updSchedulesForm');
-        updForm.querySelector('[name="openTime"]').value  = data.openTime;
-        updForm.querySelector('[name="closeTime"]').value = data.closeTime;
+        updForm.querySelector('[name="openTime"]').value  = data.openTime.slice(0,5);
+        updForm.querySelector('[name="closeTime"]').value = data.closeTime.slice(0,5);
 
         glo.idsToUpd.schedulesId = schedulesId;
       })
@@ -345,7 +368,7 @@ function getProfessionalInfos(professionalId){
       });
 }
 
-function getInFetch(url, successFunction, successFunctionParams){
+async function getInFetch(url, successFunction, successFunctionParams){
   fetch(url, {
     method: 'GET',
     headers: {
@@ -353,8 +376,8 @@ function getInFetch(url, successFunction, successFunctionParams){
     },
   })
   .then(response => response.json())
-  .then(data => {
-    successFunction(successFunctionParams ? successFunctionParams() : undefined);
+  .then(async data => {
+    await successFunction(successFunctionParams ? successFunctionParams() : undefined);
   })
   .catch((error) => {
     console.error('Erreur:', error);
@@ -414,6 +437,7 @@ async function reloadSchedulesSelectAndInit(schedulesId){
     if(schedulesId === 'last'){ schedulesId = getSelectMaxValue(schedulesHTMLSelect); }
     else if(!schedulesId){ getSelectFirstValue(schedulesHTMLSelect); }
     initSchedulesSelect(schedulesHTMLSelect, schedulesId);
+    updSchedulesHTMLSelectAdd();
 }
 async function reloadProfessionalSelectAndInit(professionalId){
     await reloadSelect(professionalHTMLSelect, glo.urls.base + glo.urls.professionalInJSON, 'fullName');
@@ -422,7 +446,31 @@ async function reloadProfessionalSelectAndInit(professionalId){
     initProfessionalSelect(professionalHTMLSelect, professionalId);
 }
 async function appointmentUpdated(){
-    alert('RDV modifié !');
+    //alert('RDV modifié !');
+}
+
+function updSchedulesHTMLSelectAdd(afterDelete = false){
+  let addDays  = [...schedulesHTMLSelectAdd.children].map(option => option.value);
+  let currDays = [...schedulesHTMLSelect.children].map(option => option.innerText);
+
+  if(afterDelete){
+    addDays = daysOfWeek;
+  }
+
+  let newAddDays = [];
+  addDays.forEach(addDay =>  {
+    if(!currDays.some(currDay => currDay === addDay)){ newAddDays.push(addDay); }
+  });
+  removeAllChildren(schedulesHTMLSelectAdd);
+  newAddDays.forEach(newAddDay => {
+    let option = document.createElement('option');
+    let txt    = document.createTextNode(newAddDay);
+
+    option.appendChild(txt);
+    option.value = newAddDay;
+
+    schedulesHTMLSelectAdd.appendChild(option);
+  });
 }
 
 function removeAllChildren(parent){

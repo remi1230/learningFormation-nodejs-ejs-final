@@ -1,5 +1,5 @@
 //Importation des modèles représentant la structure des données en BDD pour les tables service et user
-const { Service, User } = require('../model/index'); 
+const { Service, User, Appointment } = require('../model/index'); 
 
 /**
  * Crée un nouveau service avec le nom et la description fourni dans le corps de la requête.
@@ -75,12 +75,23 @@ exports.update = (req, res, next) => {
  * @param {Function} next - La fonction middleware à exécuter ensuite.
  */
 exports.getServiceById = (req, res, next) => {
-    Service.findByPk(req.params.id)
+    Service.findByPk(req.params.id, {include: [
+        {
+            model: User,
+            attributes: ['id']
+        },
+        {
+            model: Appointment,
+            attributes: ['id']
+        }
+    ]})
     .then(service => {
         if (!service) {
             return res.status(404).json({error: 'Service non trouvé !'});
         }
-        return res.status(200).json({service});
+        const isUsed = (service.Users && service.Users.length > 0) || (service.Appointments && service.Appointments.length > 0);
+        
+        return res.status(200).json({service, isUsed});
     })
     .catch(error => res.status(400).json({error}));
 };

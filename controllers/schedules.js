@@ -50,11 +50,12 @@ exports.getSchedulesById = (req, res, next) => {
 exports.addOrUpdate = (req, res, next) => {
     if(req.auth.userRole !== 'Professional'){ return res.status(400).json({ error: "You must be a professional to update a schedules!" })};
 
-    const dayOfWeek = req.body.dayOfWeek;
-    const openTime  = req.body.openTime;
-    const closeTime = req.body.closeTime;
+    const dayOfWeek   = req.body.dayOfWeek;
+    const schedulesId = req.body.schedulesId;
+    const openTime    = req.body.openTime;
+    const closeTime   = req.body.closeTime;
 
-    Schedules.findOne({ where: { dayOfWeek: dayOfWeek } })
+    Schedules.findOne(dayOfWeek ? { where: { dayOfWeek: dayOfWeek } } : { where: { id: schedulesId } })
     .then(schedules => {
         if (!schedules) {
             Schedules.create({

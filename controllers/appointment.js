@@ -7,6 +7,8 @@ const User        = db.User;
 const { createUser }          = require('./user');
 const { takeAppointmentPage } = require('./main');
 const { getAllAppointments }  = require('../services/backoffice');
+const { dateToStrFr }         = require('../services/backoffice');
+const { sendMail }            = require('../services/mail');
 
 /**
  * Crée un nouveau appointment.
@@ -63,20 +65,46 @@ exports.add = async (req, res, next) => {
 exports.update = (req, res, next) => {
     if(req.auth.userRole !== 'Professional'){ return res.status(400).json({ error: "Seuls les professionnels peuvent modifier les appointment!" })};
 
-    const id          = req.params.id;
-    const status      = req.body.status;
+    const id            = req.params.id;
+    const status        = req.body.status;
+    const statusForMail = status === 'approved' ? 'accepté' : (status === 'declined' ? 'décliné' : 'en attente');
 
-    Appointment.findByPk(id)
-    .then(appointment => {
+    Appointment.findByPk(id, {
+        include: [
+            {
+                model: User,
+                attributes: ['id', 'firstName', 'lastName']
+            },
+            {
+                model: Service,
+                attributes: ['id', 'name']
+            }
+        ]
+    })
+    .then(async appointment => {
         if (!appointment) {
             return res.status(404).json({error: 'Appointment non trouvé !'});
         }
         const updateValues = {
-            status: status   !== undefined ? status   : appointment.status,
+            status: status !== undefined ? status : appointment.status,
         };
+
+        const userFullName = appointment.User.fullName; 
+        const serviceRDV   = appointment.Service.name;
+        const dateRDV      = dateToStrFr(appointment.date);
+        const timeRDV      = appointment.time.slice(0, 5);
         
-        appointment.update(updateValues)
-        .then(() => res.status(200).json({message: 'Appointment mis à jour !'}))
+        await appointment.update(updateValues)
+        .then(() => 
+            {   sendMail({
+                    from    : 'remitafforeau@gmail.com',
+                    to      : 'remitafforeau@yahoo.fr',
+                    subject : 'RDV ' + statusForMail,
+                    text    : `Bonjour ${ userFullName }, nous vous informons que votre RDV du ${ dateRDV } à ${ timeRDV } avec le service ${ serviceRDV } est ${ statusForMail }`
+                });
+                return res.status(200).json({message: 'Appointment mis à jour !'});
+            }
+        )
         .catch(error => res.status(400).json({error}));
     })
     .catch(error => res.status(400).json({erreur: error, id: id}));
