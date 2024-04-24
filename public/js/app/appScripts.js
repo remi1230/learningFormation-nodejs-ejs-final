@@ -1,6 +1,11 @@
+/**
+ * Récupère un élément du DOM par son identifiant.
+ * @param {string} id - L'identifiant de l'élément à récupérer.
+ * @returns {Element} L'élément du DOM correspondant à l'identifiant fourni.
+ */
 const getById = id => document.getElementById(id);
 
-//Variables globales
+// Déclaration d'un objet pour les variables globales
 let glo = {
     urls: {
         base: 'http://ctrobien.com/learningFormation2/',
@@ -33,13 +38,42 @@ let newsHTMLSelect         = getById('newsId');
 let schedulesHTMLSelect    = getById('updSchedulesForm') ? getById('updSchedulesForm').querySelector('[name="schedulesId"]') : undefined;
 let schedulesHTMLSelectAdd = getById('addSchedulesForm') ? getById('addSchedulesForm').querySelector('[name="dayOfWeek"]') : undefined;
 
-const getSelectMaxValue   = (select = servicesHTMLSelect) => Math.max(...[...select.children].map(option => parseInt(option.value)));
-const getSelectFirstValue = (HTMLSelect)  => [...HTMLSelect.children][0] ? [...HTMLSelect.children][0].value : false;
-const deleteService       = (serviceId)   => { getInFetch(glo.urls.base + glo.urls.service + 'delete/' + serviceId, reloadServicesSelectAndInit); }
-const deleteNews          = (newsId)      => { getInFetch(glo.urls.base + glo.urls.news + 'delete/' + newsId, reloadNewsSelectAndInit); }
-const deleteSchedules     = async (schedulesId) => { await getInFetch(glo.urls.base + glo.urls.schedules + 'delete/' + schedulesId, function(){}); await reloadSchedulesSelectAndInit(); updSchedulesHTMLSelectAdd(true); }
+/**
+ * Obtient la valeur maximale des options d'un élément select HTML.
+ * @param {HTMLSelectElement} select - L'élément select dont on veut obtenir la valeur maximale.
+ * @returns {number} La valeur maximale trouvée parmi les options du select.
+ */
+const getSelectMaxValue = (select = servicesHTMLSelect) => Math.max(...[...select.children].map(option => parseInt(option.value)));
 
-//ÉVÈNEMENTS
+/**
+ * Obtient la première valeur des options d'un élément select HTML.
+ * @param {HTMLSelectElement} HTMLSelect - L'élément select dont on veut obtenir la première valeur.
+ * @returns {string|boolean} La première valeur trouvée parmi les options du select, ou false si aucune option n'est disponible.
+ */
+const getSelectFirstValue = (HTMLSelect)  => [...HTMLSelect.children][0] ? [...HTMLSelect.children][0].value : false;
+
+/**
+ * Supprime un service via une requête fetch et recharge la liste des services.
+ * @param {number} serviceId - L'identifiant du service à supprimer.
+ */
+const deleteService = (serviceId)   => { getInFetch(glo.urls.base + glo.urls.service + 'delete/' + serviceId, reloadServicesSelectAndInit); }
+
+/**
+ * Supprime une nouvelle via une requête fetch et recharge la liste des nouvelles.
+ * @param {number} newsId - L'identifiant de la nouvelle à supprimer.
+ */
+const deleteNews = (newsId)      => { getInFetch(glo.urls.base + glo.urls.news + 'delete/' + newsId, reloadNewsSelectAndInit); }
+
+/**
+ * Supprime un horaire via une requête fetch et recharge la liste des horaires.
+ * @param {number} schedulesId - L'identifiant de l'horaire à supprimer.
+ */
+const deleteSchedules = async (schedulesId) => {
+  await getInFetch(glo.urls.base + glo.urls.schedules + 'delete/' + schedulesId, function(){});
+  await reloadSchedulesSelectAndInit(); updSchedulesHTMLSelectAdd(true);
+}
+
+//ÉVÈNEMENT CHARGEMENT DE LA PAGE
 document.addEventListener('DOMContentLoaded', function() {
     let appointmentDone = getById('appointmentDone');
     if(appointmentDone && appointmentDone.style.display === 'block'){ fadeOut(appointmentDone); }
@@ -128,7 +162,17 @@ else if(location.pathname === '/learningFormation2/service'){
     }
 }
 
-//FUNCTIONS
+/**
+ * Ajoute un écouteur d'événements à un formulaire pour gérer l'envoi de données, la validation et la mise à jour de l'interface utilisateur.
+ * @param {string} formId - Identifiant du formulaire.
+ * @param {string} endPoint - Point de terminaison API pour l'envoi du formulaire.
+ * @param {string} [method='POST'] - Méthode HTTP à utiliser pour l'envoi du formulaire.
+ * @param {string|boolean} [idVarName=false] - Nom de la variable d'identifiant si nécessaire pour l'URL.
+ * @param {Function|false} [successFunction=false] - Fonction à exécuter après un envoi réussi.
+ * @param {Function} [successFunctionParams] - Fonction générant les paramètres pour la fonction de succès.
+ * @param {Array<string>} [checkboxesNames=[]] - Noms des cases à cocher à traiter spécialement.
+ * @param {boolean} [withFile=false] - Indique si le formulaire inclut l'envoi de fichiers.
+ */
 function addListenerOnForm(formId, enPoint, method = 'POST', idVarName = false, successFunction = false, successFunctionParams = undefined, checkboxesNames = [], withFile = false){
     let form = getById(formId);
   
@@ -173,7 +217,7 @@ function addListenerOnForm(formId, enPoint, method = 'POST', idVarName = false, 
             }
           }
   
-          fetch('http://ctrobien.com/learningFormation2/' + enPoint + param, fetchOptions)
+          fetch(glo.urls.base + enPoint + param, fetchOptions)
           .then(response => response.json())
           .then(data => {
             console.log('Succès:', data);
@@ -188,36 +232,66 @@ function addListenerOnForm(formId, enPoint, method = 'POST', idVarName = false, 
     }
 }
 
+/**
+ * Initialise les valeurs sélectionnées pour différents éléments select du DOM à partir d'une source de données.
+ * @param {HTMLSelectElement} [servicesSelect] - Élément select à initialiser.
+ * @param {string|number} [initValue] - Valeur initiale à définir pour l'élément select.
+ */
 function initServicesSelect(servicesSelect = servicesHTMLSelect, initValue = getSelectFirstValue(servicesSelect)){
     if(initValue){
       servicesSelect.value = initValue;
       getServiceInfos(initValue);
     }
 }
+/**
+ * Initialise les valeurs sélectionnées pour différents éléments select du DOM à partir d'une source de données.
+ * @param {HTMLSelectElement} [newsSelect] - Élément select à initialiser.
+ * @param {string|number} [initValue] - Valeur initiale à définir pour l'élément select.
+ */
 function initNewsSelect(newsSelect = newsHTMLSelect, initValue = getSelectFirstValue(newsHTMLSelect)){
   if(initValue){
     newsSelect.value = initValue;
     getNewsInfos(initValue);
   }
 }
+/**
+ * Initialise les valeurs sélectionnées pour différents éléments select du DOM à partir d'une source de données.
+ * @param {HTMLSelectElement} [schedulesSelect] - Élément select à initialiser.
+ * @param {string|number} [initValue] - Valeur initiale à définir pour l'élément select.
+ */
 async function initSchedulesSelect(schedulesSelect = schedulesHTMLSelect, initValue = getSelectFirstValue(schedulesHTMLSelect)){
   if(initValue){
     schedulesSelect.value = initValue;
     await getSchedulesInfos(initValue);
   }
 }
+/**
+ * Initialise les valeurs sélectionnées pour différents éléments select du DOM à partir d'une source de données.
+ * @param {HTMLSelectElement} [appointmentSelect] - Élément select à initialiser.
+ * @param {string|number} [initValue] - Valeur initiale à définir pour l'élément select.
+ */
 function initAppointmentSelect(appointmentSelect = appointmentHTMLSelect, initValue = getSelectFirstValue(appointmentHTMLSelect)){
   if(initValue){
     appointmentSelect.value = initValue;
     getAppointmentInfos(initValue);
   }
 }
+/**
+ * Initialise les valeurs sélectionnées pour différents éléments select du DOM à partir d'une source de données.
+ * @param {HTMLSelectElement} [patientSelect] - Élément select à initialiser.
+ * @param {string|number} [initValue] - Valeur initiale à définir pour l'élément select.
+ */
 function initPatientSelect(patientSelect = patientHTMLSelect, initValue = getSelectFirstValue(patientHTMLSelect)){
   if(initValue){
     patientSelect.value = initValue;
     getPatientInfos(initValue);
   }
 }
+/**
+ * Initialise les valeurs sélectionnées pour différents éléments select du DOM à partir d'une source de données.
+ * @param {HTMLSelectElement} [professionalSelect] - Élément select à initialiser.
+ * @param {string|number} [initValue] - Valeur initiale à définir pour l'élément select.
+ */
 function initProfessionalSelect(professionalSelect = professionalHTMLSelect, initValue = getSelectFirstValue(professionalHTMLSelect)){
   if(initValue){
     professionalSelect.value = initValue;
@@ -225,6 +299,10 @@ function initProfessionalSelect(professionalSelect = professionalHTMLSelect, ini
   }
 }
 
+/**
+ * Initialise les informations de service pour un identifiant de service donné et met à jour l'interface utilisateur.
+ * @param {number|string} serviceId - L'identifiant du service dont les informations sont à afficher.
+ */
 function getServiceInfos(serviceId){
     fetch(glo.urls.base + glo.urls.service + serviceId, {
         method: 'GET',
@@ -252,6 +330,10 @@ function getServiceInfos(serviceId){
       });
 }
 
+/**
+ * Récupère et affiche les détails d'une nouvelle spécifique à partir de son identifiant.
+ * @param {number|string} newsId - L'identifiant de la nouvelle dont les informations sont à récupérer.
+ */
 function getNewsInfos(newsId){
     fetch(glo.urls.base + glo.urls.news + newsId, {
         method: 'GET',
@@ -277,6 +359,10 @@ function getNewsInfos(newsId){
       });
 }
 
+/**
+ * Récupère et met à jour les détails d'un horaire spécifique en fonction de son identifiant.
+ * @param {number|string} schedulesId - L'identifiant de l'horaire à afficher et mettre à jour.
+ */
 async function getSchedulesInfos(schedulesId){
     await fetch(glo.urls.base + glo.urls.schedules + schedulesId, {
         method: 'GET',
@@ -297,6 +383,10 @@ async function getSchedulesInfos(schedulesId){
       });
 }
 
+/**
+ * Récupère et met à jour les informations d'un rendez-vous spécifique.
+ * @param {number|string} appointmentId - L'identifiant du rendez-vous dont les informations sont à récupérer.
+ */
 function getAppointmentInfos(appointmentId){
     fetch(glo.urls.base + glo.urls.appointment + appointmentId, {
         method: 'GET',
@@ -323,6 +413,10 @@ function getAppointmentInfos(appointmentId){
       });
 }
 
+/**
+ * Récupère et met à jour les informations d'un patient donné, utilisé pour initialiser les champs dans un formulaire.
+ * @param {number|string} patientId - L'identifiant du patient dont les informations sont à récupérer.
+ */
 function getPatientInfos(patientId){
     fetch(glo.urls.base + glo.urls.patient + patientId, {
         method: 'GET',
@@ -345,6 +439,10 @@ function getPatientInfos(patientId){
       });
 }
 
+/**
+ * Récupère et met à jour les informations sur un professionnel, utilisé pour initialiser les champs dans un formulaire.
+ * @param {number|string} professionalId - L'identifiant du professionnel dont les informations sont à récupérer.
+ */
 function getProfessionalInfos(professionalId){
     fetch(glo.urls.base + glo.urls.professional + professionalId, {
         method: 'GET',
@@ -368,6 +466,12 @@ function getProfessionalInfos(professionalId){
       });
 }
 
+/**
+ * Effectue une requête GET et exécute une fonction de succès après avoir reçu la réponse.
+ * @param {string} url - URL à laquelle effectuer la requête.
+ * @param {Function} successFunction - Fonction à exécuter après une réponse réussie.
+ * @param {any} [successFunctionParams] - Paramètres optionnels à passer à la fonction de succès.
+ */
 async function getInFetch(url, successFunction, successFunctionParams){
   fetch(url, {
     method: 'GET',
@@ -384,6 +488,13 @@ async function getInFetch(url, successFunction, successFunctionParams){
   });
 }
 
+/**
+ * Recharge les options d'un élément select HTML en fonction des données obtenues via une URL fetch.
+ * @param {HTMLSelectElement} HTMLSelect - L'élément select à recharger.
+ * @param {string} fetchURL - L'URL à utiliser pour la requête fetch.
+ * @param {string} propForTxt - La propriété des données JSON à utiliser pour le texte des options.
+ * @param {boolean} sortByPropForTxt - Indique si les options doivent être triées par le texte.
+ */
 async function reloadSelect(HTMLSelect, fetchURL, propForTxt, sortByPropForTxt = true){
     await fetch(fetchURL, {
         method: 'GET',
@@ -418,6 +529,10 @@ async function reloadSelect(HTMLSelect, fetchURL, propForTxt, sortByPropForTxt =
       });
 }
 
+/**
+ * Recharge et initialise la liste des services, en sélectionnant un service spécifique ou le dernier ajouté.
+ * @param {number|string} [serviceId='last'] - L'identifiant du service à sélectionner après le rechargement.
+ */
 async function reloadServicesSelectAndInit(serviceId){
     await reloadSelect(servicesHTMLSelect, glo.urls.base + glo.urls.servicesInJSON, 'name');
     if(serviceId === 'last'){ serviceId = getSelectMaxValue(); }
@@ -425,6 +540,10 @@ async function reloadServicesSelectAndInit(serviceId){
     initServicesSelect(servicesHTMLSelect, serviceId);
 }
 
+/**
+ * Recharge et initialise la liste des nouvelles, en sélectionnant une nouvelle spécifique ou la dernière ajoutée.
+ * @param {number|string} [newsId='last'] - L'identifiant de la nouvelle à sélectionner après le rechargement.
+ */
 async function reloadNewsSelectAndInit(newsId){
     await reloadSelect(newsHTMLSelect, glo.urls.base + glo.urls.newsInJSON, 'title');
     if(newsId === 'last'){ newsId = getSelectMaxValue(newsHTMLSelect); }
@@ -432,6 +551,10 @@ async function reloadNewsSelectAndInit(newsId){
     initNewsSelect(newsHTMLSelect, newsId);
 }
 
+/**
+ * Recharge et initialise la liste des horaires, en sélectionnant un horaire spécifique ou le dernier ajouté.
+ * @param {number|string} [schedulesId='last'] - L'identifiant de l'horaire à sélectionner après le rechargement.
+ */
 async function reloadSchedulesSelectAndInit(schedulesId){
     await reloadSelect(schedulesHTMLSelect, glo.urls.base + glo.urls.schedulesInJSON, 'dayOfWeek', false);
     if(schedulesId === 'last'){ schedulesId = getSelectMaxValue(schedulesHTMLSelect); }
@@ -439,6 +562,11 @@ async function reloadSchedulesSelectAndInit(schedulesId){
     initSchedulesSelect(schedulesHTMLSelect, schedulesId);
     updSchedulesHTMLSelectAdd();
 }
+
+/**
+ * Recharge et initialise la liste des professionnels, en sélectionnant un professionnel spécifique ou le dernier ajouté.
+ * @param {number|string} [professionalId='last'] - L'identifiant du professionnel à sélectionner après le rechargement.
+ */
 async function reloadProfessionalSelectAndInit(professionalId){
     await reloadSelect(professionalHTMLSelect, glo.urls.base + glo.urls.professionalInJSON, 'fullName');
     if(professionalId === 'last'){ professionalId = getSelectMaxValue(professionalHTMLSelect); }
@@ -449,6 +577,10 @@ async function appointmentUpdated(){
     //alert('RDV modifié !');
 }
 
+/**
+ * Met à jour les options du select pour les horaires après une opération de suppression.
+ * @param {boolean} [afterDelete=false] - Indique si la mise à jour est déclenchée après une suppression.
+ */
 function updSchedulesHTMLSelectAdd(afterDelete = false){
   let addDays  = [...schedulesHTMLSelectAdd.children].map(option => option.value);
   let currDays = [...schedulesHTMLSelect.children].map(option => option.innerText);
@@ -461,6 +593,7 @@ function updSchedulesHTMLSelectAdd(afterDelete = false){
   addDays.forEach(addDay =>  {
     if(!currDays.some(currDay => currDay === addDay)){ newAddDays.push(addDay); }
   });
+
   removeAllChildren(schedulesHTMLSelectAdd);
   newAddDays.forEach(newAddDay => {
     let option = document.createElement('option');
@@ -473,12 +606,19 @@ function updSchedulesHTMLSelectAdd(afterDelete = false){
   });
 }
 
+/**
+ * Supprime tous les enfants d'un élément DOM.
+ * @param {Element} parent - L'élément DOM dont les enfants doivent être supprimés.
+ */
 function removeAllChildren(parent){
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
     }
 }
 
+/**
+ * Applique un style de prévisualisation d'image à un élément du DOM.
+ */
 function designImagePreview(){
   const imgPrev = getById('updNewsForm').querySelector('[id="imagePreview"]').parentElement;
 
@@ -491,6 +631,11 @@ function designImagePreview(){
   for(let prop in optionsDesign){ imgPrev.style[prop] = optionsDesign[prop]; }
 }
 
+/**
+ * Récupère la valeur d'un cookie spécifique.
+ * @param {string} name - Le nom du cookie à récupérer.
+ * @returns {string} La valeur du cookie, ou une chaîne vide si le cookie n'est pas trouvé.
+ */
 function getCookie(name) {
     let cookies = document.cookie.split(';');
     for(let i = 0; i < cookies.length; i++) {
@@ -502,7 +647,10 @@ function getCookie(name) {
     return "";
 }
 
-
+/**
+ * Effectue un effet de fondu (fadeOut) sur un élément DOM jusqu'à ce qu'il devienne invisible.
+ * @param {Element} element - L'élément DOM sur lequel appliquer l'effet de fondu.
+ */
 function fadeOut(element) {
     let opacite = 1;
 
@@ -518,20 +666,3 @@ function fadeOut(element) {
     }
     requestAnimationFrame(step);
 }
-
-
-
-
-// TESTS FUNCTIONS
-const fillRDV = () => {
-  [
-    {id: 'email', value: 'forTest@test.fr'},
-    {id: 'firstName', value: 'Jean'},
-    {id: 'lastName', value: 'Dubidon'},
-    {id: 'phoneNumber', value: '0512123434'},
-    {id: 'date', value: '2024-05-17'},
-    {id: 'time', value: '10:30:00'},
-  ].map(infosRDV => {
-    getById(infosRDV.id).value = infosRDV.value;
-  });
-};
