@@ -36,6 +36,9 @@ footer{
 .ml100{
     margin-left: 100px;
 }
+.bRad5{
+    border-radius: 5px;
+}
 .justify{
     text-align: justify;
 }
@@ -146,6 +149,13 @@ header{
     width: 50%;
     margin: auto;
 }
+#schedulesContainer{
+    position: absolute;
+    left: 83%;
+}
+#userServiceInfos{
+    text-align: end;
+}
 
 /* ************************ NEW MENU ************************ */
 .hamburger {
@@ -170,6 +180,22 @@ header{
 }
 /* ****************************************************** */
 
+@media (max-width: 1820px) {
+    #schedulesContainer{
+        position: absolute;
+        left: 82%;
+    }
+}
+@media (max-width: 1720px) {
+    #schedulesContainer{
+        left: 80%;
+    }
+}
+@media (max-width: 1560px) {
+    #schedulesContainer{
+        left: 77%;
+    }
+}
 @media (max-width: 1425px) {
     #takeAppointment::after{
         content: 'RDV';
@@ -183,14 +209,21 @@ header{
     #cabinetInfos{
         width: 75%;
     }
+    #schedulesContainer{
+        left: 69%;
+    }
 }
-
 @media (max-width: 1000px) {
     #cabinetInfos{
         width: 85%;
     }
+    #schedulesContainer{
+        position: unset;
+    }
+    #imgClinicContainer{
+        margin-bottom: 0;
+    }
 }
-
 @media (max-width: 677px) {
     header #navigation-menu {
         display: none;
@@ -220,5 +253,5 @@ header{
     }
     .newsItem {
         justify-content: center;
-      }
+    }
 }

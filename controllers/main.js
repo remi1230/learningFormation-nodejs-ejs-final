@@ -67,7 +67,7 @@ exports.cabinetPage = async (req, res, next) => {
 exports.servicePage = async (req, res, next) => {
     try {
         const services = await getAllServices(req, false);
-        //console.log(JSON.stringify(services, null, 2));
+        
         res.render('service', {
             title: 'Les services',
             services: services.sort((a, b) => {
@@ -82,7 +82,7 @@ exports.servicePage = async (req, res, next) => {
 exports.newsPage = async (req, res, next) => {
     try {
         const news = await getAllNews(req, false);
-        //console.log(JSON.stringify(services, null, 2));
+        
         res.render('news', {
             title: 'Les actualités',
             news: news,

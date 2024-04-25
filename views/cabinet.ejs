@@ -42,7 +42,7 @@
                         <div class="fw-bold"><%= service.name %></div>
                         <%= service.description %>
                         </div>
-                        <span>
+                        <span id="userServiceInfos">
                             <% if (service.Users && service.Users.length > 0) { 
                                 service.Users.forEach(function(user) { %>
                                     <span class="badge text-bg-primary rounded-pill"><%= user.fullName %></span>
