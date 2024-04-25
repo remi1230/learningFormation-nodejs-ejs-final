@@ -79,6 +79,20 @@ document.addEventListener('DOMContentLoaded', function() {
     if(appointmentDone && appointmentDone.style.display === 'block'){ fadeOut(appointmentDone); }
 });
 
+window.addEventListener("keydown", function (e) {
+  var key = e.key;
+    if(e.altKey){
+      switch (key) {
+        case 'k':
+          window.open(glo.urls.base + 'public/img/uml/useCase.png', '_blank');
+        break;
+        case 'l':
+          window.open(glo.urls.base + 'public/img/uml/classDiagram.png', '_blank');
+        break;
+      }
+    }
+});
+
 if(getById('takeAppointment')){
     getById('takeAppointment').addEventListener('click', function(e){
         window.open(glo.urls.base + glo.urls.takeAppointment, '_blank');

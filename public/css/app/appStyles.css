@@ -132,3 +132,93 @@ header{
 #headerSpace{
     height: 50px;
 }
+
+#takeAppointment::after{
+    content: 'PRENDRE UN RDV';
+}
+#connexion::after{
+    content: 'CONNEXION';
+}
+#footerRights{
+    line-height: 1.25;
+}
+#cabinetInfos{
+    width: 50%;
+    margin: auto;
+}
+
+/* ************************ NEW MENU ************************ */
+.hamburger {
+    display: none;
+    cursor: pointer;
+    font-size: 30px;
+}
+#menuHamburger{
+    text-align: center;
+    margin-right: 5px;
+    background-color: #333;
+    color: #786bb5;
+}
+#menuHamburger::after{
+    content: '\2630';
+}
+#menu-toggle {
+    display: none;
+}
+#menu-toggle:checked + .hamburger + nav a {
+    display: block;
+}
+/* ****************************************************** */
+
+@media (max-width: 1425px) {
+    #takeAppointment::after{
+        content: 'RDV';
+    }
+    #connexion::after{
+        content: 'PRO';
+    }
+    #connectButtonContainer{
+        margin-left: -36px;
+    }
+    #cabinetInfos{
+        width: 75%;
+    }
+}
+
+@media (max-width: 1000px) {
+    #cabinetInfos{
+        width: 85%;
+    }
+}
+
+@media (max-width: 677px) {
+    header #navigation-menu {
+        display: none;
+    }
+    .hamburger {
+        display: block;
+    }
+    #menu-toggle:checked ~ #navigation-menu{
+        display: block;
+        display: flex;
+        flex-direction: column;
+    }
+    #menu-toggle:checked ~ #navigation-menu > a {
+        display: block;
+    }
+    #menu-toggle:checked + #menuHamburger::after{
+        content: '\2716';
+    }
+    .menu{
+        display: block;
+    }
+    #menuContainer{
+        height: 100%;
+    }
+    #cabinetInfos{
+        width: 100%;
+    }
+    .newsItem {
+        justify-content: center;
+      }
+}
