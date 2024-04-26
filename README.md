@@ -14,47 +14,76 @@ git pull
 npm install
 ```
 
-## Contexte
 
-Dans le cadre du développement de solutions de mobilité adaptées aux besoins actuels, votre mission est de créer un web service back-end permettant la mise en relation entre les prestataires de location de véhicules et les potentiels locataires. Ce service facilitera la consultation et la demande de location de véhicules, organisés par catégories.
-Votre Rôle
+## Créer un site web pour un cabinet dentaire avec Node JS
+### Contexte du projet
 
-En tant que développeur back-end, vous travaillez pour une entreprise innovante dans le secteur de la mobilité. Vous êtes chargé de concevoir et de mettre en œuvre un web service utilisant Node.js et MongoDB. Ce service permettra aux prestataires de lister leurs véhicules disponibles et aux locataires de naviguer parmi ces offres et de formuler des demandes de location.
+En tant que développeur backend junior et freelance, vous avez été sollicité pour réaliser une application web de gestion des rendez-vous pour le Dr. Dupont, un dentiste souhaitant renforcer sa présence en ligne. Ce projet a pour but d'attirer de nouveaux patients et de simplifier la gestion des rendez-vous pour les patients actuels.
+Spécifications fonctionnelles :
 
-## Spécifications fonctionnelles :
+## L'application se divise en deux grandes parties :
 
-### Interface prestataire (API) :
+### Front Office pour les patients
+### Back Office pour le Dr. Dupont et son équipe
 
-    Inscription/Connexion sécurisée.
-    Ajout, modification, et suppression de véhicules à louer.
-    Classification des véhicules par catégories (ex. : voiture, moto, vélo). 
+## Front Office :
 
-### Interface locataire (API) :
+### Page d'accueil :
 
-    Inscription/Connexion sécurisée.
-    Consultation des véhicules disponibles, organisés par catégories.
-    Consultation des détails d'un véhicule et ajout des commentaires 
-    Demande de location 
+    Présentation du Dr. Dupont, de son cabinet, des services offerts et des horaires d'ouverture.
+    Images de la clinique.
+    Bouton "Prendre rendez-vous".
 
-### Fonctionnalités Backend :
+### Page de prise de rendez-vous :
 
-    Gestion sécurisée des utilisateurs et des sessions via JWT (JSON Web Tokens).
-    Interface administrateur pour la supervision des utilisateurs et des annonces.
-    Notifications pour les demandes de location et les mises à jour des statuts.
+    Formulaire de prise de rendez-vous avec nom et prénom,  choix de la date, de l'heure et du type de consultation.
 
-### Contraintes :
+### Page de présentation des services :
 
-    Utilisation obligatoire de Node.js pour le backend et MongoDB pour la base de données.
-    Authentification et gestion des sessions via JWT.
-    Le service doit être conçu pour être testé avec Insomnia ou Postman (sans interface front-end).
-    Veiller à la sécurité des données utilisateurs.
+    Présentation du Dr. Dupont, de son parcours, de ses qualifications et de son équipe.
+    Détails des soins proposés (soins courants, orthodontie, implantologie, etc.).
+
+### Page actualité :
+
+    Actualités dans le domaine de la santé bucco-dentaire. 
+
+### Back Office :
+
+    Gestion des rendez-vous : Visualisation, modification, confirmation ou annulation des rendez-vous.
+    Gestion des services : Ajout, modification ou suppression des services proposés.
+    Gestion des actualités : Ajout, modification ou suppression d'articles d'actualité.
+    Gestion des patients : Gestion des informations des patients.
+    Gestion des horaires : Modification des horaires d'ouverture du cabinet.
+
+### Exigences Techniques :
+
+    Le projet doit être développé en utilisant Node.js et MySQL.
+    Les frameworks tels que Express.js sont autorisés;
+    Pour le Frontend, vous pour utiliser EJS ou Nunjucks
+    Les frameworks tels que bootstrap ou Tailwind CSS sont autorisés 
+    Chiffrement des mots de passe en base de données.
+    Implémentation des relations entre les tables de la base de données.
 
 ### Livrables :
 
-    Rapport de conception détaillant l'architecture du système, choix technologiques, modèles de données, et API endpoints.
-    Code source du projet avec instructions pour l'installation et le déploiement.
-    Documentation API expliquant comment utiliser les différents endpoints.
-    Captures d'écran de Trello montrant l'organisation du projet et la gestion des tâches.
+    Diagrammes de cas d'utilisation et diagramme de classe.
+    Code source du site web sur GitHub.
+    Lien vers le site web hébergé sur un serveur distant.
 
-### Évaluation
-    Votre projet sera évalué sur la qualité et la clarté du code, la pertinence et l'efficacité des fonctionnalités API, l'organisation du projet (illustrée par Trello), et la sécurité de l'application.
+### Déroulement de la Soutenance :
+
+#### Présentation (15 minutes) :
+        Démonstration du site web réalisé, mise en avant des fonctionnalités implémentées.
+        Explication du code source.
+
+#### Session Q&R (10 minutes) :
+        Répondre aux questions de l'évaluateur concernant le projet et les choix techniques.
+
+#### Débriefing :
+        Retour de l'évaluateur sur la soutenance.
+
+### Conseils pour la Soutenance :
+
+    Préparez une démonstration fluide de l'application, en mettant l'accent sur le back office et les fonctionnalités clés.
+    Soyez prêt à expliquer vos choix de conception et à justifier l'utilisation de certaines technologies ou méthodes.
+    Montrez que vous avez une compréhension approfondie du projet en discutant des défis rencontrés et des solutions apportées.
