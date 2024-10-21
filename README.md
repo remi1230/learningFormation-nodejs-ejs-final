@@ -1,5 +1,5 @@
 
-# Node.js et MongoDB : Créer un web service pour la location de véhicules
+# Node.js et Mysql : Créer un site web pour un cabinet dentaire avec Node JS
 ## Installation
 ### GIT
 #### Depuis un Shell de votre OS avec Node.js d'installé:
